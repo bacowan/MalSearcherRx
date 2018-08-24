@@ -16,8 +16,9 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"/>
 
     <FrameLayout
+        android:id="@+id/main_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/main_fragment"/>
+        android:paddingTop="?android:attr/actionBarSize"/>
 
 </android.support.constraint.ConstraintLayout>
