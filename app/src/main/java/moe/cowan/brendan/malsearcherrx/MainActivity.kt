@@ -2,7 +2,6 @@ package moe.cowan.brendan.malsearcherrx
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,6 +14,5 @@ class MainActivity : AppCompatActivity() {
             val fragment = SearchFragment()
             supportFragmentManager.beginTransaction().add(R.id.main_fragment, fragment).commit()
         }
-
     }
 }

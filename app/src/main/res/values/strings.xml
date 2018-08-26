@@ -1,3 +1,8 @@
 <resources>
+    <!--UI-->
     <string name="app_name">MalSearcherRx</string>
+    <string name="anime_search_button">Anime Title</string>
+
+    <!--Settings-->
+    <string name="username_setting">USERNAME</string>
 </resources>
