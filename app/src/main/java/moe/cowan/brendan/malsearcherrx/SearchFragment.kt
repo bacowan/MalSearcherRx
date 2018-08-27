@@ -34,9 +34,10 @@ class SearchFragment : Fragment() {
         val events = createPreferencesObservable()
 
         val models = events
-                .map { response -> SearchUIModel(showLoginDialog = true) }
+                .map { _ -> SearchUIModel(showLoginDialog = true) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
+                .startWith(initialSearchUIModel())
 
         disposables.add(models.subscribe { model ->
             if (model.showLoginDialog) {
@@ -56,6 +57,15 @@ class SearchFragment : Fragment() {
             emitter.setCancellable {
                 PreferenceManager.getDefaultSharedPreferences(activity?.applicationContext).unregisterOnSharedPreferenceChangeListener(listener)
             }
+        }
+    }
+
+    private fun initialSearchUIModel() : SearchUIModel {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(activity?.applicationContext)
+        val username = preferences.getString("username", "")
+        return when (username) {
+            "" -> SearchUIModel(showLoginDialog = true)
+            else -> SearchUIModel(showLoginDialog = false)
         }
     }
 }
