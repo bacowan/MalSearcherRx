@@ -2,6 +2,9 @@
     <!--UI-->
     <string name="app_name">MalSearcherRx</string>
     <string name="anime_search_button">Anime Title</string>
+    <string name="login">What\'s your MAL username?</string>
+    <string name="login_hint">Username</string>
+    <string name="login_submit">Submit</string>
 
     <!--Settings-->
     <string name="username_setting">USERNAME</string>

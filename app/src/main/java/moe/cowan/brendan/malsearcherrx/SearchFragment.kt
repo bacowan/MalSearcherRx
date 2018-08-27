@@ -15,6 +15,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import moe.cowan.brendan.malsearcherrx.Reactive.SearchUIEvent
 import moe.cowan.brendan.malsearcherrx.Reactive.SearchUIModel
+import moe.cowan.brendan.malsearcherrx.View.LoginDialogFragment
 
 class SearchFragment : Fragment() {
     private val disposables = CompositeDisposable()
@@ -41,7 +42,7 @@ class SearchFragment : Fragment() {
 
         disposables.add(models.subscribe { model ->
             if (model.showLoginDialog) {
-                Toast.makeText(activity?.applicationContext, "Hello world", Toast.LENGTH_SHORT).show()
+                LoginDialogFragment().show(fragmentManager, "LoginDialogFragment")
             }
         })
     }
