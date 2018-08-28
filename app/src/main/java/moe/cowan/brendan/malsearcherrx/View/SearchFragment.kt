@@ -1,4 +1,4 @@
-package moe.cowan.brendan.malsearcherrx
+package moe.cowan.brendan.malsearcherrx.View
 
 import android.content.SharedPreferences
 import android.support.v4.app.Fragment
@@ -7,15 +7,13 @@ import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import io.reactivex.Observable
-import io.reactivex.ObservableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import moe.cowan.brendan.malsearcherrx.R
 import moe.cowan.brendan.malsearcherrx.Reactive.SearchUIEvent
 import moe.cowan.brendan.malsearcherrx.Reactive.SearchUIModel
-import moe.cowan.brendan.malsearcherrx.View.LoginDialogFragment
 
 class SearchFragment : Fragment() {
     private val disposables = CompositeDisposable()
@@ -42,7 +40,7 @@ class SearchFragment : Fragment() {
 
         disposables.add(models.subscribe { model ->
             if (model.showLoginDialog) {
-                LoginDialogFragment().show(fragmentManager, "LoginDialogFragment")
+                //LoginDialogFragment().show(fragmentManager, "LoginDialogFragment")
             }
         })
     }
