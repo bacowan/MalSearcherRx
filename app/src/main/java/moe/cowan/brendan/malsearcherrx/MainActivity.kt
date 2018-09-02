@@ -1,21 +1,20 @@
 package moe.cowan.brendan.malsearcherrx
 
-import android.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.v4.app.Fragment
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasFragmentInjector
-import moe.cowan.brendan.malsearcherrx.DependencyInjection.MainActivityModule
+import dagger.android.support.HasSupportFragmentInjector
 import moe.cowan.brendan.malsearcherrx.View.LoginFragment
 import moe.cowan.brendan.malsearcherrx.View.SearchFragment
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), HasFragmentInjector {
+class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
-    override fun fragmentInjector(): AndroidInjector<Fragment> = injector
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> = injector
 
     @Inject
     lateinit var injector: DispatchingAndroidInjector<Fragment>
