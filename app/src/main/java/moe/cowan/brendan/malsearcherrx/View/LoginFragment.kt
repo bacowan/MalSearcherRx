@@ -45,6 +45,14 @@ class LoginFragment : Fragment() {
         setupStreams()
     }
 
+    @Override
+    override fun onStop() {
+        super.onStop()
+        if (!disposables.isDisposed) {
+            disposables.dispose()
+        }
+    }
+
     private fun setupStreams() {
         val events = RxView.clicks(submit_username_button)
                 .map { _ -> LoginUIEvent(username_edit_text.text.toString()) }
