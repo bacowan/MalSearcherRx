@@ -10,11 +10,7 @@ import moe.cowan.brendan.malsearcherrx.Reactive.UIData.LoginUIEvent
 import moe.cowan.brendan.malsearcherrx.Reactive.UIData.LoginUIModel
 import javax.inject.Inject
 
-class LoginTransformer : ObservableTransformer<LoginUIEvent, LoginUIModel> {
-
-    @Inject
-    lateinit var loginService: LoginService
-
+class LoginTransformer @Inject constructor(private val loginService: LoginService) : ObservableTransformer<LoginUIEvent, LoginUIModel> {
     override fun apply(upstream: Observable<LoginUIEvent>): ObservableSource<LoginUIModel> {
         return upstream
                 .flatMap { event -> loginService.verifyLogin(event.username)
