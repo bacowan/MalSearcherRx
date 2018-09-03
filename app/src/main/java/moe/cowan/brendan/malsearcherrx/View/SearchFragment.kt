@@ -12,8 +12,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import moe.cowan.brendan.malsearcherrx.R
-import moe.cowan.brendan.malsearcherrx.Reactive.SearchUIEvent
-import moe.cowan.brendan.malsearcherrx.Reactive.SearchUIModel
+import moe.cowan.brendan.malsearcherrx.Reactive.UIData.SearchUIEvent
+import moe.cowan.brendan.malsearcherrx.Reactive.UIData.SearchUIModel
 
 class SearchFragment : Fragment() {
     private val disposables = CompositeDisposable()
