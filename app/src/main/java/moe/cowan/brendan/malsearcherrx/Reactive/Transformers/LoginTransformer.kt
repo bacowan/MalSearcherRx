@@ -17,7 +17,7 @@ class LoginTransformer : ObservableTransformer<LoginUIEvent, LoginUIModel> {
 
     override fun apply(upstream: Observable<LoginUIEvent>): ObservableSource<LoginUIModel> {
         return upstream
-                .flatMap { event -> loginService.VerifyLogin(event.username)
+                .flatMap { event -> loginService.verifyLogin(event.username)
                 .map { response -> LoginUIModel(Success = response, InProgress = false, Message = "success") }
                 .onErrorReturn { _ -> LoginUIModel(Success = false, InProgress = false, Message = "oops") }
                 .observeOn(AndroidSchedulers.mainThread())

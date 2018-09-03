@@ -3,18 +3,19 @@ package moe.cowan.brendan.malsearcherrx.View
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import android.widget.Toast
 import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding2.widget.RxTextView
 import dagger.android.support.AndroidSupportInjection
-import io.reactivex.ObservableTransformer
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.login_fragment.*
-import moe.cowan.brendan.malsearcherrx.Model.LoginService
 import moe.cowan.brendan.malsearcherrx.R
 import moe.cowan.brendan.malsearcherrx.Reactive.Transformers.LoginTransformer
 import moe.cowan.brendan.malsearcherrx.Reactive.UIData.LoginUIEvent
@@ -54,23 +55,34 @@ class LoginFragment : Fragment() {
     }
 
     private fun setupStreams() {
-        val events = RxView.clicks(submit_username_button)
+        val events = setupUiEvents()
+        disposables.add(events.compose(loginTransformer).subscribe { model -> updateUI(model) } )
+    }
+
+    private fun setupUiEvents() : Observable<LoginUIEvent> {
+        val imeDoneEvent = RxTextView.editorActionEvents(username_edit_text)
+                .filter { event -> event.actionId() == EditorInfo.IME_ACTION_DONE }
                 .map { _ -> LoginUIEvent(username_edit_text.text.toString()) }
 
-        disposables.add(events.compose(loginTransformer).subscribe { model ->
-            progress_bar_layout.visibility = if (model.InProgress) {
-                View.VISIBLE
-            }
-            else {
-                View.GONE
-            }
-            if (!model.Message.isEmpty()) {
-                Toast.makeText(context, model.Message, Toast.LENGTH_SHORT).show()
-            }
-            if (model.Success) {
-            }
-            else {
-            }
-        })
+        val loginButtonClickEvent = RxView.clicks(submit_username_button)
+                .map { _ -> LoginUIEvent(username_edit_text.text.toString()) }
+
+        return imeDoneEvent.mergeWith(loginButtonClickEvent)
+    }
+
+    private fun updateUI(model: LoginUIModel) {
+        progress_bar_layout.visibility = if (model.InProgress) {
+            View.VISIBLE
+        }
+        else {
+            View.GONE
+        }
+        if (!model.Message.isEmpty()) {
+            Toast.makeText(context, model.Message, Toast.LENGTH_SHORT).show()
+        }
+        if (model.Success) {
+        }
+        else {
+        }
     }
 }

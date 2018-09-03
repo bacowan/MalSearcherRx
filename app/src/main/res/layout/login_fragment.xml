@@ -18,7 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/login_hint"
-            android:inputType="text"/>
+            android:inputType="text"
+            android:imeOptions="actionDone"/>
         <Button
             android:id="@+id/submit_username_button"
             android:layout_width="match_parent"
