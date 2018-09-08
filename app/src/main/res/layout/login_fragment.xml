@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/login_hint"
             android:inputType="text"
+            android:singleLine="true"
             android:imeOptions="actionDone"/>
         <Button
             android:id="@+id/submit_username_button"

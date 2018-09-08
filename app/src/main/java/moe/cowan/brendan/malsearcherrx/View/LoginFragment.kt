@@ -21,6 +21,9 @@ import moe.cowan.brendan.malsearcherrx.Reactive.Transformers.LoginTransformer
 import moe.cowan.brendan.malsearcherrx.Reactive.UIData.LoginUIEvent
 import moe.cowan.brendan.malsearcherrx.Reactive.UIData.LoginUIModel
 import javax.inject.Inject
+import android.view.inputmethod.InputMethodManager
+
+
 
 class LoginFragment : Fragment() {
 
@@ -62,12 +65,18 @@ class LoginFragment : Fragment() {
     private fun setupUiEvents() : Observable<LoginUIEvent> {
         val imeDoneEvent = RxTextView.editorActionEvents(username_edit_text)
                 .filter { event -> event.actionId() == EditorInfo.IME_ACTION_DONE }
+                .doOnNext { _ -> hideKeyboard() }
                 .map { _ -> LoginUIEvent(username_edit_text.text.toString()) }
 
         val loginButtonClickEvent = RxView.clicks(submit_username_button)
                 .map { _ -> LoginUIEvent(username_edit_text.text.toString()) }
 
         return imeDoneEvent.mergeWith(loginButtonClickEvent)
+    }
+
+    private fun hideKeyboard() {
+        val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 
     private fun updateUI(model: LoginUIModel) {
