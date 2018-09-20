@@ -22,6 +22,10 @@ import moe.cowan.brendan.malsearcherrx.Reactive.UIData.LoginUIEvent
 import moe.cowan.brendan.malsearcherrx.Reactive.UIData.LoginUIModel
 import javax.inject.Inject
 import android.view.inputmethod.InputMethodManager
+import moe.cowan.brendan.malsearcherrx.Reactive.UIData.LoginAction
+import io.reactivex.internal.util.NotificationLite.disposable
+import io.reactivex.internal.disposables.DisposableHelper.dispose
+
 
 
 
@@ -58,18 +62,23 @@ class LoginFragment : Fragment() {
     }
 
     private fun setupStreams() {
+        val initialState = LoginUIModel(InProgress = false, Success = false, Message = "")
         val events = setupUiEvents()
-        disposables.add(events.compose(loginTransformer).subscribe { model -> updateUI(model) } )
+        val eventTransformer = events.publish { shared -> shared.compose(loginTransformer) }
+        val uiModels = eventTransformer.scan(initialState) { state, result ->
+                LoginUIModel(InProgress = result.InProgress, Message = result.Message, Success = result.Success)
+        }
+        disposables.add(uiModels.subscribe { model -> updateUI(model) } )
     }
 
-    private fun setupUiEvents() : Observable<LoginUIEvent> {
+    private fun setupUiEvents() : Observable<LoginAction> {
         val imeDoneEvent = RxTextView.editorActionEvents(username_edit_text)
                 .filter { event -> event.actionId() == EditorInfo.IME_ACTION_DONE }
                 .doOnNext { _ -> hideKeyboard() }
-                .map { _ -> LoginUIEvent(username_edit_text.text.toString()) }
+                .map { _ -> LoginAction(username_edit_text.text.toString()) }
 
         val loginButtonClickEvent = RxView.clicks(submit_username_button)
-                .map { _ -> LoginUIEvent(username_edit_text.text.toString()) }
+                .map { _ -> LoginAction(username_edit_text.text.toString()) }
 
         return imeDoneEvent.mergeWith(loginButtonClickEvent)
     }
@@ -93,5 +102,10 @@ class LoginFragment : Fragment() {
         }
         else {
         }
+    }
+
+    override fun onDestroy() {
+        disposables.dispose()
+        super.onDestroy()
     }
 }
