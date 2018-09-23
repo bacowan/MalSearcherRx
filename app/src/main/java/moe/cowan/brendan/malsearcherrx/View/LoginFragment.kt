@@ -1,5 +1,7 @@
 package moe.cowan.brendan.malsearcherrx.View
 
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -25,14 +27,15 @@ import android.view.inputmethod.InputMethodManager
 import moe.cowan.brendan.malsearcherrx.Reactive.UIData.LoginAction
 import io.reactivex.internal.util.NotificationLite.disposable
 import io.reactivex.internal.disposables.DisposableHelper.dispose
-
-
+import moe.cowan.brendan.malsearcherrx.ViewModel.LoginViewModel
 
 
 class LoginFragment : Fragment() {
 
+    //@Inject
+    //lateinit var loginTransformer: LoginTransformer
     @Inject
-    lateinit var loginTransformer: LoginTransformer
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val disposables = CompositeDisposable()
 
@@ -62,23 +65,22 @@ class LoginFragment : Fragment() {
     }
 
     private fun setupStreams() {
-        val initialState = LoginUIModel(InProgress = false, Success = false, Message = "")
-        val events = setupUiEvents()
-        val eventTransformer = events.publish { shared -> shared.compose(loginTransformer) }
-        val uiModels = eventTransformer.scan(initialState) { state, result ->
-                LoginUIModel(InProgress = result.InProgress, Message = result.Message, Success = result.Success)
-        }
+        val vm = ViewModelProviders.of(this, viewModelFactory)[LoginViewModel::class.java]
+
+        val uiEvents = setupUiEvents()
+        val uiModels = vm.SubscribeTo(uiEvents)
+
         disposables.add(uiModels.subscribe { model -> updateUI(model) } )
     }
 
-    private fun setupUiEvents() : Observable<LoginAction> {
+    private fun setupUiEvents() : Observable<LoginUIEvent> {
         val imeDoneEvent = RxTextView.editorActionEvents(username_edit_text)
                 .filter { event -> event.actionId() == EditorInfo.IME_ACTION_DONE }
                 .doOnNext { _ -> hideKeyboard() }
-                .map { _ -> LoginAction(username_edit_text.text.toString()) }
+                .map { _ -> LoginUIEvent(username_edit_text.text.toString()) }
 
         val loginButtonClickEvent = RxView.clicks(submit_username_button)
-                .map { _ -> LoginAction(username_edit_text.text.toString()) }
+                .map { _ -> LoginUIEvent(username_edit_text.text.toString()) }
 
         return imeDoneEvent.mergeWith(loginButtonClickEvent)
     }

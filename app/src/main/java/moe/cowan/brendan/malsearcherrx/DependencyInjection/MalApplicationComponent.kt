@@ -6,6 +6,6 @@ import dagger.android.support.AndroidSupportInjectionModule
 import moe.cowan.brendan.malsearcherrx.MalSearcherApplication
 import javax.inject.Singleton
 
-@Component(modules = [MainActivityModule::class, BackEndModule::class, AndroidSupportInjectionModule::class])
+@Component(modules = [MainActivityModule::class, BackEndModule::class, ViewModelModule::class, AndroidSupportInjectionModule::class])
 @Singleton
 interface MalApplicationComponent : AndroidInjector<MalSearcherApplication>
