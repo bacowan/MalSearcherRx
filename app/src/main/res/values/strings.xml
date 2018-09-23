@@ -8,4 +8,8 @@
 
     <!--Settings-->
     <string name="username_setting">USERNAME</string>
+    <string name="anime">Anime:</string>
+    <string name="character">Character:</string>
+    <string name="language">Language:</string>
+    <string name="search">Search</string>
 </resources>
