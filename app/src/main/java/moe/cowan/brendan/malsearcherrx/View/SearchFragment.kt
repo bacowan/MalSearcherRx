@@ -63,7 +63,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun loadAnimeSearch() {
-        
+
     }
 
 }
