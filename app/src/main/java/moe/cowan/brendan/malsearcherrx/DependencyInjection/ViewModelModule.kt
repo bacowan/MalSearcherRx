@@ -8,6 +8,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
 import moe.cowan.brendan.malsearcherrx.ViewModel.LoginViewModel
+import moe.cowan.brendan.malsearcherrx.ViewModel.SearchViewModel
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -34,4 +35,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(LoginViewModel::class)
     abstract fun LoginViewModel(vm: LoginViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SearchViewModel::class)
+    abstract fun SearchViewModel(vm: SearchViewModel): ViewModel
 }
