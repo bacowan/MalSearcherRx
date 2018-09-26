@@ -38,7 +38,14 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, LoginFragm
     }
 
     override fun OnLogin(username: String) {
+        saveUsername(username)
         val fragment = SearchFragment()
         supportFragmentManager.beginTransaction().replace(R.id.main_fragment, fragment).commit()
+    }
+
+    private fun saveUsername(username: String) {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext).edit()
+        preferences.putString("username", username)
+        preferences.apply()
     }
 }
