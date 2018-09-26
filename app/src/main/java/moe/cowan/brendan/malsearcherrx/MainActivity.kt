@@ -12,7 +12,7 @@ import moe.cowan.brendan.malsearcherrx.View.LoginFragment
 import moe.cowan.brendan.malsearcherrx.View.SearchFragment
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
+class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, LoginFragment.OnLoginListener {
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = injector
 
@@ -35,5 +35,10 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
             }
             supportFragmentManager.beginTransaction().add(R.id.main_fragment, fragment).commit()
         }
+    }
+
+    override fun OnLogin(username: String) {
+        val fragment = SearchFragment()
+        supportFragmentManager.beginTransaction().replace(R.id.main_fragment, fragment).commit()
     }
 }

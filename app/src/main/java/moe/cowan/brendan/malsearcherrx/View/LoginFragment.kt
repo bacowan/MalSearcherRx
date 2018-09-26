@@ -5,12 +5,10 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.TextView
 import android.widget.Toast
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -19,21 +17,15 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.login_fragment.*
 import moe.cowan.brendan.malsearcherrx.R
-import moe.cowan.brendan.malsearcherrx.Reactive.Transformers.LoginTransformer
-import moe.cowan.brendan.malsearcherrx.Reactive.UIData.LoginUIEvent
-import moe.cowan.brendan.malsearcherrx.Reactive.UIData.LoginUIModel
+import moe.cowan.brendan.malsearcherrx.Reactive.UIEvents.LoginUIEvent
+import moe.cowan.brendan.malsearcherrx.Reactive.UIModels.Login.LoginUIModel
 import javax.inject.Inject
 import android.view.inputmethod.InputMethodManager
-import moe.cowan.brendan.malsearcherrx.Reactive.UIData.LoginAction
-import io.reactivex.internal.util.NotificationLite.disposable
-import io.reactivex.internal.disposables.DisposableHelper.dispose
 import moe.cowan.brendan.malsearcherrx.ViewModel.LoginViewModel
 
 
 class LoginFragment : Fragment() {
 
-    //@Inject
-    //lateinit var loginTransformer: LoginTransformer
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -100,14 +92,20 @@ class LoginFragment : Fragment() {
         if (!model.Message.isEmpty()) {
             Toast.makeText(context, model.Message, Toast.LENGTH_SHORT).show()
         }
-        if (model.Success) {
-        }
-        else {
+        model.SuccessfulUsername?.let {
+            val act = activity
+            if (act is OnLoginListener) {
+                act.OnLogin(it)
+            }
         }
     }
 
     override fun onDestroy() {
         disposables.dispose()
         super.onDestroy()
+    }
+
+    interface OnLoginListener {
+        fun OnLogin(username: String)
     }
 }
