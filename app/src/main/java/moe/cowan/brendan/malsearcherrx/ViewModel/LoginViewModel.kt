@@ -5,7 +5,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import moe.cowan.brendan.malsearcherrx.Reactive.Transformers.LoginTransformer
 import moe.cowan.brendan.malsearcherrx.Reactive.Actions.LoginAction
-import moe.cowan.brendan.malsearcherrx.Reactive.UIEvents.LoginUIEvent
+import moe.cowan.brendan.malsearcherrx.Reactive.UIEvents.Login.LoginUIEvent
 import moe.cowan.brendan.malsearcherrx.Reactive.UIModels.Login.LoginUIModel
 import javax.inject.Inject
 
@@ -21,7 +21,6 @@ class LoginViewModel @Inject constructor(): ViewModel() {
     }
 
     fun SubscribeTo(events: Observable<LoginUIEvent>) : Observable<LoginUIModel> {
-
         val results = events.map { ev -> LoginAction(ev.username) }
                 .publish { shared -> shared.compose(loginTransformer) }
         val uiModels = results.map {

@@ -17,7 +17,7 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.login_fragment.*
 import moe.cowan.brendan.malsearcherrx.R
-import moe.cowan.brendan.malsearcherrx.Reactive.UIEvents.LoginUIEvent
+import moe.cowan.brendan.malsearcherrx.Reactive.UIEvents.Login.LoginUIEvent
 import moe.cowan.brendan.malsearcherrx.Reactive.UIModels.Login.LoginUIModel
 import javax.inject.Inject
 import android.view.inputmethod.InputMethodManager
