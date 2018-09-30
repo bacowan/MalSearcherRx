@@ -30,7 +30,7 @@ class SearchFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val disposables = CompositeDisposable()
+    private var disposables = CompositeDisposable()
 
     @Override
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -46,6 +46,9 @@ class SearchFragment : Fragment() {
     @Override
     override fun onStart() {
         super.onStart()
+        if (disposables.isDisposed) {
+            disposables = CompositeDisposable()
+        }
         setupStreams()
     }
 
@@ -63,8 +66,8 @@ class SearchFragment : Fragment() {
         val uiEvents = setupUiEvents()
         val (models, posts) = vm.SubscribeTo(uiEvents)
 
-        disposables.add(models.subscribe { updateUI(it) } )
-        disposables.add(posts.subscribe { updateUI(it) } )
+        disposables.add( models.subscribe { updateUI(it) } )
+        disposables.add( posts.subscribe { updateUI(it) } )
     }
 
     private fun setupUiEvents() : Observable<SearchUIEvent> {

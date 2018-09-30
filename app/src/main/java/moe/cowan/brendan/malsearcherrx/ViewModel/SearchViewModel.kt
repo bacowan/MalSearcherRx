@@ -23,7 +23,7 @@ class SearchViewModel @Inject constructor(): ViewModel() {
 
     fun SubscribeTo(events: Observable<SearchUIEvent>) : Pair<Observable<SearchUIModel>, Observable<SearchUIPost>> {
         val posts = events.publish {
-            it.ofType(StartAnimeSearchEvent::class.java).map { ShowAnimeSearch() as SearchUIPost }
+            it.ofType(StartAnimeSearchEvent::class.java).map { _ -> ShowAnimeSearch() as SearchUIPost }
         }
 
         posts.subscribe(searchPostSubject)
