@@ -29,7 +29,7 @@ class LoginFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val disposables = CompositeDisposable()
+    private var disposables = CompositeDisposable()
 
     @Override
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -45,6 +45,9 @@ class LoginFragment : Fragment() {
     @Override
     override fun onStart() {
         super.onStart()
+        if (disposables.isDisposed) {
+            disposables = CompositeDisposable()
+        }
         setupStreams()
     }
 

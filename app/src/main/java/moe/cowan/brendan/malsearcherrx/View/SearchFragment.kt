@@ -21,7 +21,6 @@ import moe.cowan.brendan.malsearcherrx.Reactive.UIEvents.Search.StartLanguageSea
 import moe.cowan.brendan.malsearcherrx.Reactive.UIModels.Search.SearchUIModel
 import moe.cowan.brendan.malsearcherrx.Reactive.UIModels.Search.SearchUIPost
 import moe.cowan.brendan.malsearcherrx.Reactive.UIModels.Search.ShowAnimeSearch
-import moe.cowan.brendan.malsearcherrx.ViewModel.LoginViewModel
 import moe.cowan.brendan.malsearcherrx.ViewModel.SearchViewModel
 import javax.inject.Inject
 
