@@ -1,5 +1,6 @@
 package moe.cowan.brendan.malsearcherrx.View
 
+import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -21,7 +22,10 @@ import moe.cowan.brendan.malsearcherrx.Reactive.UIEvents.Login.LoginUIEvent
 import moe.cowan.brendan.malsearcherrx.Reactive.UIModels.Login.LoginUIModel
 import javax.inject.Inject
 import android.view.inputmethod.InputMethodManager
-import moe.cowan.brendan.malsearcherrx.ViewModel.LoginViewModel
+import moe.cowan.brendan.malsearcherrx.Reactive.UIModels.Login.LoginUIPost
+import moe.cowan.brendan.malsearcherrx.ViewModel.MissingViewModelException
+import moe.cowan.brendan.malsearcherrx.ViewModel.SubscribableViewModel
+import java.lang.ClassCastException
 
 
 class LoginFragment : Fragment() {
@@ -29,10 +33,20 @@ class LoginFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    lateinit var viewModelClass: Class<SubscribableViewModel<LoginUIEvent, LoginUIModel, LoginUIPost>>
+
     private var disposables = CompositeDisposable()
 
     @Override
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        arguments?.let {
+            try {
+                viewModelClass = it.getSerializable("VIEW_MODEL_CLASS") as Class<SubscribableViewModel<LoginUIEvent, LoginUIModel, LoginUIPost>>
+            }
+            catch (e: ClassCastException) {
+                throw MissingViewModelException()
+            }
+        } ?: throw MissingViewModelException()
         return inflater.inflate(R.layout.login_fragment, container, false)
     }
 
@@ -60,10 +74,10 @@ class LoginFragment : Fragment() {
     }
 
     private fun setupStreams() {
-        val vm = ViewModelProviders.of(this, viewModelFactory)[LoginViewModel::class.java]
+        val vm = ViewModelProviders.of(this, viewModelFactory)[viewModelClass]
 
         val uiEvents = setupUiEvents()
-        val uiModels = vm.SubscribeTo(uiEvents)
+        val (uiModels, _) = vm.SubscribeTo(uiEvents)
 
         disposables.add(uiModels.subscribe { model -> updateUI(model) } )
     }

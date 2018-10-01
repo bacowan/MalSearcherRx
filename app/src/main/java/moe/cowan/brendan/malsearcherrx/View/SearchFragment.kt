@@ -14,14 +14,20 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.search_fragment.*
 import moe.cowan.brendan.malsearcherrx.R
+import moe.cowan.brendan.malsearcherrx.Reactive.UIEvents.Login.LoginUIEvent
 import moe.cowan.brendan.malsearcherrx.Reactive.UIEvents.Search.SearchUIEvent
 import moe.cowan.brendan.malsearcherrx.Reactive.UIEvents.Search.StartAnimeSearchEvent
 import moe.cowan.brendan.malsearcherrx.Reactive.UIEvents.Search.StartCharacterSearchEvent
 import moe.cowan.brendan.malsearcherrx.Reactive.UIEvents.Search.StartLanguageSearchEvent
+import moe.cowan.brendan.malsearcherrx.Reactive.UIModels.Login.LoginUIModel
+import moe.cowan.brendan.malsearcherrx.Reactive.UIModels.Login.LoginUIPost
 import moe.cowan.brendan.malsearcherrx.Reactive.UIModels.Search.SearchUIModel
 import moe.cowan.brendan.malsearcherrx.Reactive.UIModels.Search.SearchUIPost
 import moe.cowan.brendan.malsearcherrx.Reactive.UIModels.Search.ShowAnimeSearch
+import moe.cowan.brendan.malsearcherrx.ViewModel.MissingViewModelException
 import moe.cowan.brendan.malsearcherrx.ViewModel.SearchViewModel
+import moe.cowan.brendan.malsearcherrx.ViewModel.SubscribableViewModel
+import java.lang.ClassCastException
 import javax.inject.Inject
 
 class SearchFragment : Fragment() {
@@ -29,10 +35,20 @@ class SearchFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    lateinit var viewModelClass: Class<SubscribableViewModel<SearchUIEvent, SearchUIModel, SearchUIPost>>
+
     private var disposables = CompositeDisposable()
 
     @Override
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        arguments?.let {
+            try {
+                viewModelClass = it.getSerializable("VIEW_MODEL_CLASS") as Class<SubscribableViewModel<SearchUIEvent, SearchUIModel, SearchUIPost>>
+            }
+            catch (e: ClassCastException) {
+                throw MissingViewModelException()
+            }
+        } ?: throw MissingViewModelException()
         return inflater.inflate(R.layout.search_fragment, container, false)
     }
 
@@ -60,7 +76,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupStreams() {
-        val vm = ViewModelProviders.of(this, viewModelFactory)[SearchViewModel::class.java]
+        val vm = ViewModelProviders.of(this, viewModelFactory)[viewModelClass]
 
         val uiEvents = setupUiEvents()
         val (models, posts) = vm.SubscribeTo(uiEvents)
