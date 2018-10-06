@@ -7,7 +7,8 @@ import android.support.v4.app.DialogFragment
 import moe.cowan.brendan.malsearcherrx.R
 
 class AnimeSearchDialog : DialogFragment() {
-    
+
+    @Override
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
             val builder = AlertDialog.Builder(it)
@@ -15,5 +16,13 @@ class AnimeSearchDialog : DialogFragment() {
             builder.setView(view)
             builder.create()
         } ?: throw IllegalStateException("Activity cannot be null")
+    }
+
+    @Override
+    override fun onResume() {
+        super.onResume()
+        dialog.window.setLayout(
+                resources.displayMetrics.widthPixels,
+                resources.displayMetrics.heightPixels)
     }
 }

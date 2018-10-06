@@ -25,7 +25,7 @@ abstract class ReactiveFragment<TEvent, TModel, TPost> : Fragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    lateinit var viewModelClass: Class<SubscribableViewModel<TEvent, TModel, TPost>>
+    private lateinit var viewModelClass: Class<SubscribableViewModel<TEvent, TModel, TPost>>
 
     private var disposables = CompositeDisposable()
 
