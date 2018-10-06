@@ -2,10 +2,10 @@ package moe.cowan.brendan.malsearcherrx.DependencyInjection
 
 import dagger.Module
 import dagger.Provides
-import moe.cowan.brendan.malsearcherrx.View.ReactiveFragmentFactory
+import moe.cowan.brendan.malsearcherrx.View.FragmentFactory
 
 @Module
 class FragmentModule {
     @Provides
-    fun provideFragmentFactory(): ReactiveFragmentFactory = ReactiveFragmentFactory()
+    fun provideFragmentFactory(): FragmentFactory = FragmentFactory()
 }

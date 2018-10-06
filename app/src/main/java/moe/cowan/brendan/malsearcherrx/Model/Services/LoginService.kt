@@ -1,4 +1,4 @@
-package moe.cowan.brendan.malsearcherrx.Model
+package moe.cowan.brendan.malsearcherrx.Model.Services
 
 import io.reactivex.Observable
 

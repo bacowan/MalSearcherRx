@@ -19,8 +19,8 @@ class SearchViewModel @Inject constructor(): SubscribableViewModel<SearchUIEvent
 ) {
 
     override fun subscribe(events: Observable<SearchUIEvent>) : Pair<Observable<SearchUIModel>?, Observable<SearchUIPost>?> {
-        val posts = events.publish {
-            it.ofType(StartAnimeSearchEvent::class.java).map { _ -> ShowAnimeSearch() as SearchUIPost }
+        val posts = events.publish { event ->
+            event.ofType(StartAnimeSearchEvent::class.java).map { ShowAnimeSearch() as SearchUIPost }
         }
         return Pair(null, posts)
     }

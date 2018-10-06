@@ -1,4 +1,4 @@
-package moe.cowan.brendan.malsearcherrx.Model
+package moe.cowan.brendan.malsearcherrx.Model.Services
 
 import android.os.SystemClock
 import io.reactivex.Observable

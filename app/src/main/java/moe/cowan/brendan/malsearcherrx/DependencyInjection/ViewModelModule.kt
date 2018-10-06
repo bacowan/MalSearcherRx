@@ -6,6 +6,7 @@ import dagger.Binds
 import dagger.MapKey
 import dagger.Module
 import dagger.multibindings.IntoMap
+import moe.cowan.brendan.malsearcherrx.ViewModel.AnimeSearchViewModel
 import moe.cowan.brendan.malsearcherrx.ViewModel.LoginViewModel
 import moe.cowan.brendan.malsearcherrx.ViewModel.SearchViewModel
 import javax.inject.Inject
@@ -38,25 +39,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SearchViewModel::class)
     abstract fun SearchViewModel(vm: SearchViewModel): ViewModel
-}
 
-//@Module
-//class ViewModelModule {
-//    @Provides
-//    fun LoginViewModelFactory() : ViewModelFactory<LoginUIEvent, LoginUIModel, LoginUIPost> {
-//        return object : ViewModelFactory<LoginUIEvent, LoginUIModel, LoginUIPost> {
-//            override fun create(fragment: Fragment): SubscribableViewModel<LoginUIEvent, LoginUIModel, LoginUIPost> {
-//                return LoginViewModel()
-//            }
-//        }
-//    }
-//
-//    @Provides
-//    fun SearchViewModelFactory() : ViewModelFactory<SearchUIEvent, SearchUIModel, SearchUIPost> {
-//        return object : ViewModelFactory<SearchUIEvent, SearchUIModel, SearchUIPost> {
-//            override fun create(fragment: Fragment): SubscribableViewModel<SearchUIEvent, SearchUIModel, SearchUIPost> {
-//                return SearchViewModel()
-//            }
-//        }
-//    }
-//}
+    @Binds
+    @IntoMap
+    @ViewModelKey(AnimeSearchViewModel::class)
+    abstract fun AnimeSearchViewModel(vm: AnimeSearchViewModel): ViewModel
+}

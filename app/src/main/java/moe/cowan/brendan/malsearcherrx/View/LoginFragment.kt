@@ -36,11 +36,11 @@ class LoginFragment : ReactiveFragment<LoginUIEvent, LoginUIModel, LoginUIPost>(
     override fun setupUiEvents() : Observable<LoginUIEvent> {
         val imeDoneEvent = RxTextView.editorActionEvents(username_edit_text)
                 .filter { event -> event.actionId() == EditorInfo.IME_ACTION_DONE }
-                .doOnNext { _ -> hideKeyboard() }
-                .map { _ -> LoginUIEvent(username_edit_text.text.toString()) }
+                .doOnNext { hideKeyboard() }
+                .map { LoginUIEvent(username_edit_text.text.toString()) }
 
         val loginButtonClickEvent = RxView.clicks(submit_username_button)
-                .map { _ -> LoginUIEvent(username_edit_text.text.toString()) }
+                .map { LoginUIEvent(username_edit_text.text.toString()) }
 
         return imeDoneEvent.mergeWith(loginButtonClickEvent)
     }
@@ -52,11 +52,9 @@ class LoginFragment : ReactiveFragment<LoginUIEvent, LoginUIModel, LoginUIPost>(
 
     @Override
     override fun updateUIModel(model: LoginUIModel) {
-        progress_bar_layout.visibility = if (model.InProgress) {
-            View.VISIBLE
-        }
-        else {
-            View.GONE
+        progress_bar_layout.visibility = when (model.InProgress) {
+            true -> View.VISIBLE
+            else -> View.GONE
         }
         if (!model.Message.isEmpty()) {
             Toast.makeText(context, model.Message, Toast.LENGTH_SHORT).show()
