@@ -28,61 +28,12 @@ import moe.cowan.brendan.malsearcherrx.ViewModel.SubscribableViewModel
 import java.lang.ClassCastException
 
 
-class LoginFragment : Fragment() {
+class LoginFragment : ReactiveFragment<LoginUIEvent, LoginUIModel, LoginUIPost>() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    lateinit var viewModelClass: Class<SubscribableViewModel<LoginUIEvent, LoginUIModel, LoginUIPost>>
-
-    private var disposables = CompositeDisposable()
+    override val layout get() = R.layout.login_fragment
 
     @Override
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        arguments?.let {
-            try {
-                viewModelClass = it.getSerializable("VIEW_MODEL_CLASS") as Class<SubscribableViewModel<LoginUIEvent, LoginUIModel, LoginUIPost>>
-            }
-            catch (e: ClassCastException) {
-                throw MissingViewModelException()
-            }
-        } ?: throw MissingViewModelException()
-        return inflater.inflate(R.layout.login_fragment, container, false)
-    }
-
-    @Override
-    override fun onAttach(context: Context?) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
-
-    @Override
-    override fun onStart() {
-        super.onStart()
-        if (disposables.isDisposed) {
-            disposables = CompositeDisposable()
-        }
-        setupStreams()
-    }
-
-    @Override
-    override fun onStop() {
-        super.onStop()
-        if (!disposables.isDisposed) {
-            disposables.dispose()
-        }
-    }
-
-    private fun setupStreams() {
-        val vm = ViewModelProviders.of(this, viewModelFactory)[viewModelClass]
-
-        val uiEvents = setupUiEvents()
-        val (uiModels, _) = vm.SubscribeTo(uiEvents)
-
-        disposables.add(uiModels.subscribe { model -> updateUI(model) } )
-    }
-
-    private fun setupUiEvents() : Observable<LoginUIEvent> {
+    override fun setupUiEvents() : Observable<LoginUIEvent> {
         val imeDoneEvent = RxTextView.editorActionEvents(username_edit_text)
                 .filter { event -> event.actionId() == EditorInfo.IME_ACTION_DONE }
                 .doOnNext { _ -> hideKeyboard() }
@@ -99,7 +50,8 @@ class LoginFragment : Fragment() {
         imm.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 
-    private fun updateUI(model: LoginUIModel) {
+    @Override
+    override fun updateUIModel(model: LoginUIModel) {
         progress_bar_layout.visibility = if (model.InProgress) {
             View.VISIBLE
         }
@@ -115,11 +67,6 @@ class LoginFragment : Fragment() {
                 act.OnLogin(it)
             }
         }
-    }
-
-    override fun onDestroy() {
-        disposables.dispose()
-        super.onDestroy()
     }
 
     interface OnLoginListener {

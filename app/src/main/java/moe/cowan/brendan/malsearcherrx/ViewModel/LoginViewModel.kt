@@ -12,26 +12,19 @@ import moe.cowan.brendan.malsearcherrx.Reactive.UIModels.Login.LoginUIPost
 import moe.cowan.brendan.malsearcherrx.Reactive.UIModels.Search.SearchUIPost
 import javax.inject.Inject
 
-class LoginViewModel @Inject constructor(): SubscribableViewModel<LoginUIEvent, LoginUIModel, LoginUIPost>() {
+class LoginViewModel @Inject constructor(): SubscribableViewModel<LoginUIEvent, LoginUIModel, LoginUIPost>(
+        LoginUIModel(InProgress = false, SuccessfulUsername = null, Message = "")
+) {
     @Inject
     lateinit var loginTransformer: LoginTransformer
 
-    private val loginUISubject: BehaviorSubject<LoginUIModel> = BehaviorSubject.create()
-    private val loginPostSubject: PublishSubject<LoginUIPost> = PublishSubject.create()
-
-    init {
-        val initialState = LoginUIModel(InProgress = false, SuccessfulUsername = null, Message = "")
-        loginUISubject.onNext(initialState)
-    }
-
-    override fun SubscribeTo(events: Observable<LoginUIEvent>) : Pair<Observable<LoginUIModel>, Observable<LoginUIPost>> {
+    override fun subscribe(events: Observable<LoginUIEvent>) : Pair<Observable<LoginUIModel>?, Observable<LoginUIPost>?> {
         val results = events.map { ev -> LoginAction(ev.username) }
                 .publish { shared -> shared.compose(loginTransformer) }
         val uiModels = results.map {
             LoginUIModel(InProgress = it.InProgress, Message = it.Message, SuccessfulUsername = it.SuccessfulUsername)
         }
 
-        uiModels.subscribe(loginUISubject)
-        return Pair(loginUISubject, loginPostSubject)
+        return Pair(uiModels, null)
     }
 }

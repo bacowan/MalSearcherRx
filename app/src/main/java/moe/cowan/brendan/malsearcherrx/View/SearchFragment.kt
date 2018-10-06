@@ -30,62 +30,12 @@ import moe.cowan.brendan.malsearcherrx.ViewModel.SubscribableViewModel
 import java.lang.ClassCastException
 import javax.inject.Inject
 
-class SearchFragment : Fragment() {
+class SearchFragment :  ReactiveFragment<SearchUIEvent, SearchUIModel, SearchUIPost>() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    lateinit var viewModelClass: Class<SubscribableViewModel<SearchUIEvent, SearchUIModel, SearchUIPost>>
-
-    private var disposables = CompositeDisposable()
+    override val layout get() = R.layout.search_fragment
 
     @Override
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        arguments?.let {
-            try {
-                viewModelClass = it.getSerializable("VIEW_MODEL_CLASS") as Class<SubscribableViewModel<SearchUIEvent, SearchUIModel, SearchUIPost>>
-            }
-            catch (e: ClassCastException) {
-                throw MissingViewModelException()
-            }
-        } ?: throw MissingViewModelException()
-        return inflater.inflate(R.layout.search_fragment, container, false)
-    }
-
-    @Override
-    override fun onAttach(context: Context?) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
-
-    @Override
-    override fun onStart() {
-        super.onStart()
-        if (disposables.isDisposed) {
-            disposables = CompositeDisposable()
-        }
-        setupStreams()
-    }
-
-    @Override
-    override fun onStop() {
-        super.onStop()
-        if (!disposables.isDisposed) {
-            disposables.dispose()
-        }
-    }
-
-    private fun setupStreams() {
-        val vm = ViewModelProviders.of(this, viewModelFactory)[viewModelClass]
-
-        val uiEvents = setupUiEvents()
-        val (models, posts) = vm.SubscribeTo(uiEvents)
-
-        disposables.add( models.subscribe { updateUI(it) } )
-        disposables.add( posts.subscribe { updateUI(it) } )
-    }
-
-    private fun setupUiEvents() : Observable<SearchUIEvent> {
+    override fun setupUiEvents() : Observable<SearchUIEvent> {
         val searchAnimeEvents = RxView.clicks(anime_search_button)
                 .map { _ -> StartAnimeSearchEvent() as SearchUIEvent }
 
@@ -100,11 +50,12 @@ class SearchFragment : Fragment() {
                 .mergeWith(searchLanguageEvents)
     }
 
-    private fun updateUI(model: SearchUIModel) {
-
+    @Override
+    override fun updateUIModel(model: SearchUIModel) {
     }
 
-    private fun updateUI(post: SearchUIPost) {
+    @Override
+    override fun updateUIPost(post: SearchUIPost) {
         when (post) {
             is ShowAnimeSearch -> AnimeSearchDialog().show(fragmentManager, "")
         }
