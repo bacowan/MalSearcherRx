@@ -15,7 +15,7 @@
             android:hint="@string/anime_title"
             android:inputType="text"
             android:imeOptions="actionSearch"
-            android:drawableEnd="@drawable/ic_search_icon"/>
+            android:drawableEnd="@drawable/ic_search"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/results_list"

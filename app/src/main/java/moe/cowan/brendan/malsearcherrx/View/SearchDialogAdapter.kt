@@ -2,24 +2,40 @@ package moe.cowan.brendan.malsearcherrx.View
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import com.squareup.picasso.Picasso
 import moe.cowan.brendan.malsearcherrx.R
 import moe.cowan.brendan.malsearcherrx.Reactive.UIModels.Search.SearchResultUIModel
 
 class SearchDialogAdapter(private val dataSet: List<SearchResultUIModel>): RecyclerView.Adapter<SearchDialogAdapter.SearchResultViewHolder>() {
-    class SearchResultViewHolder(val textView: TextView): RecyclerView.ViewHolder(textView)
+    class SearchResultViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+        val textView: TextView = itemView.findViewById(R.id.text_view)
+        val imageView: ImageView = itemView.findViewById(R.id.image_view)
+    }
 
     @Override
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.search_result_row, parent, false) as TextView
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.search_result_row, parent, false)
         return SearchResultViewHolder(view)
     }
 
     @Override
     override fun onBindViewHolder(holder: SearchResultViewHolder, position: Int) {
         holder.textView.text = dataSet[position].title
-        holder.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_launcher_background, 0, 0, 0)
+        if (dataSet[position].imageUrl != "") {
+            Picasso.with(holder.textView.context)
+                    .load(dataSet[position].imageUrl)
+                    .placeholder(R.drawable.ic_photo)
+                    .error(R.drawable.ic_broken_image)
+                    .fit()
+                    .into(holder.imageView)
+        }
+        else {
+            holder.imageView.setImageResource(R.drawable.ic_broken_image)
+        }
     }
 
     @Override
