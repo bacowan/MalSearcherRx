@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
+import android.support.annotation.CallSuper
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -29,12 +30,14 @@ abstract class ReactiveDialog<TEvent, TModel, TPost> : DialogFragment() {
     protected abstract val layout: Int
 
     @Override
+    @CallSuper
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
     }
 
     @Override
+    @CallSuper
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         arguments?.let {
             try {
@@ -47,6 +50,7 @@ abstract class ReactiveDialog<TEvent, TModel, TPost> : DialogFragment() {
     }
 
     @Override
+    @CallSuper
     override fun onStart() {
         super.onStart()
         if (disposables.isDisposed) {
@@ -56,6 +60,7 @@ abstract class ReactiveDialog<TEvent, TModel, TPost> : DialogFragment() {
     }
 
     @Override
+    @CallSuper
     override fun onStop() {
         super.onStop()
         if (!disposables.isDisposed) {
@@ -64,6 +69,7 @@ abstract class ReactiveDialog<TEvent, TModel, TPost> : DialogFragment() {
     }
 
     @Override
+    @CallSuper
     override fun onDestroy() {
         disposables.dispose()
         super.onDestroy()

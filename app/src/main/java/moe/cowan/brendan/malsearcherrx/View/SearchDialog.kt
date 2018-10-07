@@ -1,10 +1,12 @@
 package moe.cowan.brendan.malsearcherrx.View
 
-import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -19,6 +21,13 @@ import moe.cowan.brendan.malsearcherrx.Reactive.UIModels.Search.SearchDialogUIPo
 class SearchDialog : ReactiveDialog<DialogSearchUIEvent, SearchDialogUIModel, SearchDialogUIPost>() {
 
     override val layout: Int get() = R.layout.search_dialog
+
+    @Override
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = super.onCreateView(inflater, container, savedInstanceState)
+        view?.findViewById<RecyclerView>(R.id.results_list)?.layoutManager = LinearLayoutManager(activity)
+        return view
+    }
 
     @Override
     override fun onResume() {
@@ -42,6 +51,7 @@ class SearchDialog : ReactiveDialog<DialogSearchUIEvent, SearchDialogUIModel, Se
             true -> View.VISIBLE
             else -> View.GONE
         }
+        results_list.adapter = SearchDialogAdapter(model.anime)
     }
 
     private fun hideKeyboard() {
