@@ -2,10 +2,10 @@ package moe.cowan.brendan.malsearcherrx.DependencyInjection
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import moe.cowan.brendan.malsearcherrx.MainActivity
-import moe.cowan.brendan.malsearcherrx.View.LoginFragment
-import moe.cowan.brendan.malsearcherrx.View.SearchDialog
-import moe.cowan.brendan.malsearcherrx.View.SearchFragment
+import moe.cowan.brendan.malsearcherrx.View.MainActivity
+import moe.cowan.brendan.malsearcherrx.View.Fragments.LoginFragment
+import moe.cowan.brendan.malsearcherrx.View.Dialogs.SearchDialog
+import moe.cowan.brendan.malsearcherrx.View.Fragments.MainSearchFragment
 
 @Module
 abstract class MainActivityModule {
@@ -16,7 +16,7 @@ abstract class MainActivityModule {
     abstract fun contributeLoginFragmentInjector() : LoginFragment
 
     @ContributesAndroidInjector
-    abstract fun contributeSearchFragmentInjector() : SearchFragment
+    abstract fun contributeSearchFragmentInjector() : MainSearchFragment
 
     @ContributesAndroidInjector
     abstract fun contributeSearchDialog() : SearchDialog

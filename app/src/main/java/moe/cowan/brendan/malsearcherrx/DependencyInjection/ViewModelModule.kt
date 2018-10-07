@@ -6,9 +6,9 @@ import dagger.Binds
 import dagger.MapKey
 import dagger.Module
 import dagger.multibindings.IntoMap
-import moe.cowan.brendan.malsearcherrx.ViewModel.AnimeSearchViewModel
-import moe.cowan.brendan.malsearcherrx.ViewModel.LoginViewModel
-import moe.cowan.brendan.malsearcherrx.ViewModel.SearchViewModel
+import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.AnimeSearchViewModel
+import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.LoginViewModel
+import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.SearchViewModel
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
