@@ -2,6 +2,7 @@ package moe.cowan.brendan.malsearcherrx.View
 
 import android.content.Context
 import android.os.Bundle
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -25,16 +26,15 @@ class SearchDialog : ReactiveDialog<DialogSearchUIEvent, SearchDialogUIModel, Se
     @Override
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = super.onCreateView(inflater, container, savedInstanceState)
-        view?.findViewById<RecyclerView>(R.id.results_list)?.layoutManager = LinearLayoutManager(activity)
+        val resultsView = view?.findViewById<RecyclerView>(R.id.results_list)
+        resultsView?.layoutManager = LinearLayoutManager(activity)
+        resultsView?.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
         return view
     }
 
     @Override
     override fun onResume() {
         super.onResume()
-        dialog.window.setLayout(
-                resources.displayMetrics.widthPixels,
-                resources.displayMetrics.heightPixels)
     }
 
     @Override
