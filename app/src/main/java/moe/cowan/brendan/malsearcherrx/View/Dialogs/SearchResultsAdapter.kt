@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
 import moe.cowan.brendan.malsearcherrx.R
-import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.SearchResultUIModel
+import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchResultUIModel
 
 class SearchResultsAdapter(private val dataSet: List<SearchResultUIModel>): RecyclerView.Adapter<SearchResultsAdapter.SearchResultViewHolder>() {
     class SearchResultViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {

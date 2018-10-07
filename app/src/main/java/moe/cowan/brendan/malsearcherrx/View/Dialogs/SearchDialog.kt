@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.search_dialog.*
 import moe.cowan.brendan.malsearcherrx.R
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.DialogSearchUIEvent
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.SearchEvent
-import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.SearchDialogUIModel
+import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchDialogUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.SearchDialogUIPost
 
 class SearchDialog : ReactiveDialog<DialogSearchUIEvent, SearchDialogUIModel, SearchDialogUIPost>() {
@@ -51,7 +51,7 @@ class SearchDialog : ReactiveDialog<DialogSearchUIEvent, SearchDialogUIModel, Se
             true -> View.VISIBLE
             else -> View.GONE
         }
-        results_list.adapter = SearchResultsAdapter(model.anime)
+        results_list.adapter = SearchResultsAdapter(model.searchResults)
     }
 
     private fun hideKeyboard() {

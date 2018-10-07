@@ -13,4 +13,7 @@
     <string name="language">Language:</string>
     <string name="search">Search</string>
     <string name="anime_title">Anime Title</string>
+    <string name="search_for_anime_button_default">Search for Anime</string>
+    <string name="search_for_character_button_default">Search for Character</string>
+    <string name="select_language_button_default">Select Language</string>
 </resources>

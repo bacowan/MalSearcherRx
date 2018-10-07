@@ -9,7 +9,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.LoginViewModel
-import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.SearchViewModel
+import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.MainSearchViewModel
 import moe.cowan.brendan.malsearcherrx.R
 import moe.cowan.brendan.malsearcherrx.View.Fragments.FragmentFactory
 import moe.cowan.brendan.malsearcherrx.View.Fragments.LoginFragment
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, LoginFragm
             val username = preferences.getString("username", "")
             val fragment = when (username) {
                 "" -> fragmentFactory.createFragment<LoginFragment, LoginViewModel>()
-                else -> fragmentFactory.createFragment<MainSearchFragment, SearchViewModel>()
+                else -> fragmentFactory.createFragment<MainSearchFragment, MainSearchViewModel>()
             }
             supportFragmentManager.beginTransaction().add(R.id.main_fragment, fragment).commit()
         }
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, LoginFragm
 
     override fun OnLogin(username: String) {
         saveUsername(username)
-        val fragment = fragmentFactory.createFragment<MainSearchFragment, SearchViewModel>()
+        val fragment = fragmentFactory.createFragment<MainSearchFragment, MainSearchViewModel>()
         supportFragmentManager.beginTransaction().replace(R.id.main_fragment, fragment).commit()
     }
 

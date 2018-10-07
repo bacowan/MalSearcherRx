@@ -8,7 +8,7 @@ import moe.cowan.brendan.malsearcherrx.View.UIEvents.MainSearchUIEvent
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.StartAnimeSearchEvent
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.StartCharacterSearchEvent
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.StartLanguageSearchEvent
-import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.MainSearchUIModel
+import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.MainSearchUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.MainSearchUIPost
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.ShowAnimeSearch
 import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.AnimeSearchViewModel
@@ -43,6 +43,34 @@ class MainSearchFragment :  ReactiveFragment<MainSearchUIEvent, MainSearchUIMode
         when (post) {
             is ShowAnimeSearch -> fragmentFactory.createDialogFragment<SearchDialog, AnimeSearchViewModel>().show(fragmentManager, "")
         }
+    }
+
+    @Override
+    override fun updateUIModel(model: MainSearchUIModel) {
+        if (model.anime == null) {
+            //anime_search_button.text = getString(R.string.search_for_anime_button_default)
+            anime_search_button.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_search, 0)
+        }
+        else {
+
+        }
+
+        if (model.character == null) {
+            //character_search_button.text = getString(R.string.search_for_character_button_default)
+            character_search_button.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_search, 0)
+        }
+        else {
+
+        }
+
+        if (model.language == null) {
+            //language_search_button.text = getString(R.string.select_language_button_default)
+            language_search_button.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_search, 0)
+        }
+        else {
+
+        }
+
     }
 
 }

@@ -4,7 +4,7 @@ import io.reactivex.Observable
 import moe.cowan.brendan.malsearcherrx.Presenter.ActionToResultTransformers.LoginTransformer
 import moe.cowan.brendan.malsearcherrx.Presenter.Actions.LoginAction
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.LoginUIEvent
-import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.LoginUIModel
+import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Login.LoginUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.LoginUIPost
 import javax.inject.Inject
 
