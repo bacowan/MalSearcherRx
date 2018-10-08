@@ -26,6 +26,8 @@ abstract class ReactiveDialog<TEvent, TModel, TPost> : DialogFragment() {
 
     private var disposables = CompositeDisposable()
 
+    private var previousModel: TModel? = null
+
     protected abstract val layout: Int
 
     @Override
@@ -80,7 +82,10 @@ abstract class ReactiveDialog<TEvent, TModel, TPost> : DialogFragment() {
         val uiEvents = setupUiEvents()
         val (uiModels, posts) = vm.SubscribeTo(uiEvents)
 
-        disposables.add(uiModels.subscribe { model -> updateUIModel(model) })
+        disposables.add(uiModels.subscribe { model -> if (previousModel != model) {
+            updateUIModel(model)
+            previousModel = model
+        }})
         disposables.add(posts.subscribe { post -> updateUIPost(post) })
     }
 

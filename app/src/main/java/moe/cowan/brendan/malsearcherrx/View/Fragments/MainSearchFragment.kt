@@ -1,73 +1,86 @@
 package moe.cowan.brendan.malsearcherrx.View.Fragments
 
+import android.content.Intent
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
+import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.search_fragment.*
 import moe.cowan.brendan.malsearcherrx.R
-import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.MainSearchUIEvent
-import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.StartAnimeSearchEvent
-import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.StartCharacterSearchEvent
-import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.StartLanguageSearchEvent
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.MainSearchUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.MainSearchUIPost
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.ShowAnimeSearch
 import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.AnimeSearchViewModel
 import moe.cowan.brendan.malsearcherrx.View.Dialogs.SearchDialog
+import moe.cowan.brendan.malsearcherrx.View.Dialogs.SearchResultKey
+import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchResultUIModel
+import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.*
 import javax.inject.Inject
 
-class MainSearchFragment :  ReactiveFragment<MainSearchUIEvent, MainSearchUIModel, MainSearchUIPost>() {
+const val AnimeResultCode = 1
+
+class MainSearchFragment : ReactiveFragment<MainSearchUIEvent, MainSearchUIModel, MainSearchUIPost>() {
 
     @Inject
     lateinit var fragmentFactory: FragmentFactory
 
     override val layout get() = R.layout.search_fragment
 
+    private val searchResultsSubject: BehaviorSubject<SearchResultUIModel> = BehaviorSubject.create()
+
     @Override
     override fun setupUiEvents() : Observable<MainSearchUIEvent> {
         val searchAnimeEvents = RxView.clicks(anime_search_button)
-                .map { _ -> StartAnimeSearchEvent() as MainSearchUIEvent }
+                .map { StartAnimeSearchEvent() as MainSearchUIEvent }
 
         val searchCharacterEvents = RxView.clicks(character_search_button)
-                .map { _ -> StartCharacterSearchEvent() as MainSearchUIEvent }
+                .map { StartCharacterSearchEvent() as MainSearchUIEvent }
 
         val searchLanguageEvents = RxView.clicks(language_search_button)
-                .map { _ -> StartLanguageSearchEvent() as MainSearchUIEvent }
+                .map { StartLanguageSearchEvent() as MainSearchUIEvent }
+
+        val searchAnimeResultEvents = searchResultsSubject
+                .map { SearchAnimeResultEvent(it) }
 
         return searchAnimeEvents
                 .mergeWith(searchCharacterEvents)
                 .mergeWith(searchLanguageEvents)
+                .mergeWith(searchAnimeResultEvents)
     }
 
     @Override
     override fun updateUIPost(post: MainSearchUIPost) {
         when (post) {
-            is ShowAnimeSearch -> fragmentFactory.createDialogFragment<SearchDialog, AnimeSearchViewModel>().show(fragmentManager, "")
+            is ShowAnimeSearch -> {
+                val fragment = fragmentFactory.createDialogFragment<SearchDialog, AnimeSearchViewModel>()
+                fragment.setTargetFragment(this, AnimeResultCode)
+                fragment.show(fragmentManager, "")
+            }
         }
     }
 
     @Override
     override fun updateUIModel(model: MainSearchUIModel) {
-        if (model.anime == null) {
-            anime_search_button.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_search, 0)
-        }
-        else {
-
+        if (model.anime != null) {
+            anime_search_button.text = model.anime.title
         }
 
-        if (model.character == null) {
-            character_search_button.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_search, 0)
-        }
-        else {
-
+        if (model.character != null) {
         }
 
-        if (model.language == null) {
-            language_search_button.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_search, 0)
-        }
-        else {
-
+        if (model.language != null) {
         }
 
+    }
+
+    @Override
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == AnimeResultCode) {
+            val anime = data?.getSerializableExtra(SearchResultKey)
+            if (anime is SearchResultUIModel) {
+                searchResultsSubject.onNext(anime)
+            }
+        }
     }
 
 }

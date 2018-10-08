@@ -1,6 +1,8 @@
 package moe.cowan.brendan.malsearcherrx.View.Dialogs
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
@@ -18,8 +20,11 @@ import moe.cowan.brendan.malsearcherrx.R
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.DialogSearchUIEvent
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.SearchEvent
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchDialogUIModel
+import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchResultUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.SearchDialogUIPost
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.SearchItemClickEvent
+
+const val SearchResultKey = "SEARCH_RESULT"
 
 class SearchDialog : ReactiveDialog<DialogSearchUIEvent, SearchDialogUIModel, SearchDialogUIPost>() {
 
@@ -57,12 +62,18 @@ class SearchDialog : ReactiveDialog<DialogSearchUIEvent, SearchDialogUIModel, Se
             true -> View.VISIBLE
             else -> View.GONE
         }
-        results_list.adapter = SearchResultsAdapter(model.searchResults, View.OnClickListener
-            { v -> itemClickSubject.onNext(SearchItemClickEvent(v)) })
+
+        val clickListener = object:SearchResultsAdapter.OnSearchResultClickListener {
+            override fun onClick(row: SearchResultUIModel) = itemClickSubject.onNext(SearchItemClickEvent(row))
+        }
+        results_list.adapter = SearchResultsAdapter(model.searchResults, clickListener)
     }
 
     @Override
     override fun updateUIPost(post: SearchDialogUIPost) {
+        val intent = Intent()
+        intent.putExtra(SearchResultKey, post.result)
+        targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
         dismiss()
     }
 

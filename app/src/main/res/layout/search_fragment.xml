@@ -20,7 +20,8 @@
 
                     <Button
                         android:id="@+id/anime_search_button"
-                        android:layout_column="1"/>
+                        android:layout_column="1"
+                        android:drawableEnd="@drawable/ic_search"/>
 
                 </TableRow>
             <TableRow
@@ -33,7 +34,8 @@
 
                 <Button
                     android:id="@+id/character_search_button"
-                    android:layout_column="1"/>
+                    android:layout_column="1"
+                    android:drawableEnd="@drawable/ic_search"/>
             </TableRow>
             <TableRow
                 android:layout_width="match_parent"
@@ -45,7 +47,8 @@
 
                 <Button
                     android:id="@+id/language_search_button"
-                    android:layout_column="1"/>
+                    android:layout_column="1"
+                    android:drawableEnd="@drawable/ic_search"/>
             </TableRow>
         </TableLayout>
 

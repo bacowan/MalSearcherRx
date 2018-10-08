@@ -25,6 +25,8 @@ abstract class ReactiveFragment<TEvent, TModel, TPost> : Fragment() {
 
     private var disposables = CompositeDisposable()
 
+    private var previousModel: TModel? = null
+
     protected abstract val layout: Int
 
     @Override
@@ -75,7 +77,10 @@ abstract class ReactiveFragment<TEvent, TModel, TPost> : Fragment() {
         val uiEvents = setupUiEvents()
         val (uiModels, posts) = vm.SubscribeTo(uiEvents)
 
-        disposables.add(uiModels.subscribe { model -> updateUIModel(model) } )
+        disposables.add(uiModels.subscribe { model -> if (previousModel != model) {
+            updateUIModel(model)
+            previousModel = model
+        }})
         disposables.add(posts.subscribe { post -> updateUIPost(post) } )
     }
 

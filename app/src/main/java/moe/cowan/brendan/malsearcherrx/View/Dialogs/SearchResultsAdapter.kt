@@ -12,9 +12,13 @@ import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchResultU
 
 class SearchResultsAdapter(
         private val dataSet: List<SearchResultUIModel>,
-        private val clickListener: View.OnClickListener)
+        private val clickListener: OnSearchResultClickListener)
     : RecyclerView.Adapter<SearchResultsAdapter.SearchResultViewHolder>()
 {
+    interface OnSearchResultClickListener {
+        fun onClick(row: SearchResultUIModel)
+    }
+
     class SearchResultViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val textView: TextView = itemView.findViewById(R.id.text_view)
         val imageView: ImageView = itemView.findViewById(R.id.image_view)
@@ -28,11 +32,17 @@ class SearchResultsAdapter(
 
     @Override
     override fun onBindViewHolder(holder: SearchResultViewHolder, position: Int) {
-        holder.itemView.setOnClickListener(clickListener)
+        val boundItem = dataSet[position]
+
+        holder.itemView.setOnClickListener {
+            clickListener.onClick(SearchResultUIModel(boundItem.title, boundItem.imageUrl, boundItem.databaseId))
+        }
+
         holder.textView.text = dataSet[position].title
-        if (dataSet[position].imageUrl != "") {
+
+        if (boundItem.imageUrl != "") {
             Picasso.with(holder.textView.context)
-                    .load(dataSet[position].imageUrl)
+                    .load(boundItem.imageUrl)
                     .placeholder(R.drawable.ic_photo)
                     .error(R.drawable.ic_broken_image)
                     .fit()
