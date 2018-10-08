@@ -4,10 +4,10 @@ import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.search_fragment.*
 import moe.cowan.brendan.malsearcherrx.R
-import moe.cowan.brendan.malsearcherrx.View.UIEvents.MainSearchUIEvent
-import moe.cowan.brendan.malsearcherrx.View.UIEvents.StartAnimeSearchEvent
-import moe.cowan.brendan.malsearcherrx.View.UIEvents.StartCharacterSearchEvent
-import moe.cowan.brendan.malsearcherrx.View.UIEvents.StartLanguageSearchEvent
+import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.MainSearchUIEvent
+import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.StartAnimeSearchEvent
+import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.StartCharacterSearchEvent
+import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.StartLanguageSearchEvent
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.MainSearchUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.MainSearchUIPost
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.ShowAnimeSearch
@@ -48,7 +48,6 @@ class MainSearchFragment :  ReactiveFragment<MainSearchUIEvent, MainSearchUIMode
     @Override
     override fun updateUIModel(model: MainSearchUIModel) {
         if (model.anime == null) {
-            //anime_search_button.text = getString(R.string.search_for_anime_button_default)
             anime_search_button.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_search, 0)
         }
         else {
@@ -56,7 +55,6 @@ class MainSearchFragment :  ReactiveFragment<MainSearchUIEvent, MainSearchUIMode
         }
 
         if (model.character == null) {
-            //character_search_button.text = getString(R.string.search_for_character_button_default)
             character_search_button.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_search, 0)
         }
         else {
@@ -64,7 +62,6 @@ class MainSearchFragment :  ReactiveFragment<MainSearchUIEvent, MainSearchUIMode
         }
 
         if (model.language == null) {
-            //language_search_button.text = getString(R.string.select_language_button_default)
             language_search_button.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_search, 0)
         }
         else {

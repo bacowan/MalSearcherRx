@@ -1,4 +1,4 @@
-package moe.cowan.brendan.malsearcherrx.View.UIEvents
+package moe.cowan.brendan.malsearcherrx.View.UIEvents.Search
 
 interface MainSearchUIEvent
 

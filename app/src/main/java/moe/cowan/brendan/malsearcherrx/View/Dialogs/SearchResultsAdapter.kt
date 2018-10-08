@@ -10,7 +10,11 @@ import com.squareup.picasso.Picasso
 import moe.cowan.brendan.malsearcherrx.R
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchResultUIModel
 
-class SearchResultsAdapter(private val dataSet: List<SearchResultUIModel>): RecyclerView.Adapter<SearchResultsAdapter.SearchResultViewHolder>() {
+class SearchResultsAdapter(
+        private val dataSet: List<SearchResultUIModel>,
+        private val clickListener: View.OnClickListener)
+    : RecyclerView.Adapter<SearchResultsAdapter.SearchResultViewHolder>()
+{
     class SearchResultViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val textView: TextView = itemView.findViewById(R.id.text_view)
         val imageView: ImageView = itemView.findViewById(R.id.image_view)
@@ -24,6 +28,7 @@ class SearchResultsAdapter(private val dataSet: List<SearchResultUIModel>): Recy
 
     @Override
     override fun onBindViewHolder(holder: SearchResultViewHolder, position: Int) {
+        holder.itemView.setOnClickListener(clickListener)
         holder.textView.text = dataSet[position].title
         if (dataSet[position].imageUrl != "") {
             Picasso.with(holder.textView.context)

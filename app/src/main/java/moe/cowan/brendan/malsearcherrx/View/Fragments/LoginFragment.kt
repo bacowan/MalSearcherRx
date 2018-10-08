@@ -9,7 +9,7 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.login_fragment.*
 import moe.cowan.brendan.malsearcherrx.R
-import moe.cowan.brendan.malsearcherrx.View.UIEvents.LoginUIEvent
+import moe.cowan.brendan.malsearcherrx.View.UIEvents.Login.LoginUIEvent
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Login.LoginUIModel
 import android.view.inputmethod.InputMethodManager
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.LoginUIPost

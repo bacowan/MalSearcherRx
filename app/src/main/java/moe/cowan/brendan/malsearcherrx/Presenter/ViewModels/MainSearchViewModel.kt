@@ -1,8 +1,8 @@
 package moe.cowan.brendan.malsearcherrx.Presenter.ViewModels
 
 import io.reactivex.Observable
-import moe.cowan.brendan.malsearcherrx.View.UIEvents.MainSearchUIEvent
-import moe.cowan.brendan.malsearcherrx.View.UIEvents.StartAnimeSearchEvent
+import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.MainSearchUIEvent
+import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.StartAnimeSearchEvent
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.MainSearchUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.MainSearchUIPost
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.ShowAnimeSearch
