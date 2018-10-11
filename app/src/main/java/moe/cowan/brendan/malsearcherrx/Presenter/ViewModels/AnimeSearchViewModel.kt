@@ -12,7 +12,7 @@ import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.SearchDialogUIPost
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.SearchItemClickEvent
 import javax.inject.Inject
 
-class AnimeSearchViewModel @Inject constructor() : SubscribableViewModel<DialogSearchUIEvent, SearchDialogUIModel, SearchDialogUIPost>() {
+class AnimeSearchViewModel @Inject constructor(): SubscribableViewModel<DialogSearchUIEvent, SearchDialogUIModel, SearchDialogUIPost>() {
 
     @Inject
     lateinit var animeSearchTransformer: AnimeSearchTransformer

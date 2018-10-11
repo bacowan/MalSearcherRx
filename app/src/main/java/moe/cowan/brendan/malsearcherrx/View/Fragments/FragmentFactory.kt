@@ -4,17 +4,14 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.SubscribableViewModel
 import moe.cowan.brendan.malsearcherrx.View.Dialogs.ReactiveDialog
-import moe.cowan.brendan.malsearcherrx.View.Dialogs.ReactiveDialog_MembersInjector
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class FragmentFactory {
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+@Singleton
+class FragmentFactory @Inject constructor(val viewModelFactory: ViewModelProvider.Factory) {
 
     inline fun <reified TFragment: ReactiveFragment<*, *, *>, reified TViewModel: SubscribableViewModel<*, *, *>> createFragment(): TFragment {
         val fragment = TFragment::class.java.newInstance()

@@ -12,7 +12,7 @@ import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.SearchEvent
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.SearchItemClickEvent
 import javax.inject.Inject
 
-class CharacterSearchViewModel: SubscribableViewModel<DialogSearchUIEvent, SearchDialogUIModel, SearchDialogUIPost>() {
+class CharacterSearchViewModel @Inject constructor(): SubscribableViewModel<DialogSearchUIEvent, SearchDialogUIModel, SearchDialogUIPost>() {
 
     @Inject
     lateinit var characterSearchTransformer: CharacterSearchTransformer
