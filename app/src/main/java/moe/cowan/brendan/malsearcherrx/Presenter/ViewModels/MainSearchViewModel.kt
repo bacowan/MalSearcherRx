@@ -9,6 +9,7 @@ import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchResultU
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.MainSearchUIPost
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.SearchDialogUIPost
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.ShowAnimeSearch
+import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.ShowCharacterSearch
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.*
 import javax.inject.Inject
 
@@ -17,6 +18,7 @@ class MainSearchViewModel @Inject constructor(): SubscribableViewModel<MainSearc
     override fun subscribe(events: Observable<MainSearchUIEvent>) : Pair<Observable<MainSearchUIModel>?, Observable<MainSearchUIPost>?> {
         val results = events.publish { shared -> Observable.merge(
                 shared.ofType(StartAnimeSearchEvent::class.java).map { ShowAnimeSearch() as MainSearchUIPost },
+                shared.ofType(StartCharacterSearchEvent::class.java).map { ShowCharacterSearch() as MainSearchUIPost },
                 shared.ofType(SearchAnimeResultEvent::class.java))
         }.share()
 

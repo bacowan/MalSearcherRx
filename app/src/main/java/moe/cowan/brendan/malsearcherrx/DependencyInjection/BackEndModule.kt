@@ -2,10 +2,7 @@ package moe.cowan.brendan.malsearcherrx.DependencyInjection
 
 import dagger.Module
 import dagger.Provides
-import moe.cowan.brendan.malsearcherrx.Model.Services.AlwaysValidLoginService
-import moe.cowan.brendan.malsearcherrx.Model.Services.AnimeSearcher
-import moe.cowan.brendan.malsearcherrx.Model.Services.LoginService
-import moe.cowan.brendan.malsearcherrx.Model.Services.OnlyPokemonAnimeSearcher
+import moe.cowan.brendan.malsearcherrx.Model.Services.*
 
 @Module
 class BackEndModule {
@@ -14,4 +11,7 @@ class BackEndModule {
 
     @Provides
     fun AnimeSearcher() : AnimeSearcher = OnlyPokemonAnimeSearcher()
+
+    @Provides
+    fun CharacterSearcher() : CharacterSearcher = OnlyPikachuCharacterSearcher()
 }

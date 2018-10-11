@@ -1,12 +1,22 @@
 package moe.cowan.brendan.malsearcherrx.View.Fragments
 
 import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
+import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.SubscribableViewModel
+import moe.cowan.brendan.malsearcherrx.View.Dialogs.ReactiveDialog
+import moe.cowan.brendan.malsearcherrx.View.Dialogs.ReactiveDialog_MembersInjector
+import javax.inject.Inject
 
 class FragmentFactory {
-    inline fun <reified TFragment: Fragment, reified TViewModel: ViewModel> createFragment(): Fragment {
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    inline fun <reified TFragment: ReactiveFragment<*, *, *>, reified TViewModel: SubscribableViewModel<*, *, *>> createFragment(): TFragment {
         val fragment = TFragment::class.java.newInstance()
         val args = Bundle()
         args.putSerializable("VIEW_MODEL_CLASS", TViewModel::class.java)
@@ -14,11 +24,15 @@ class FragmentFactory {
         return fragment
     }
 
-    inline fun <reified TFragment: DialogFragment, reified TViewModel: ViewModel> createDialogFragment(): DialogFragment {
+    inline fun <reified TFragment: ReactiveDialog<*, *, *>, reified TViewModel: SubscribableViewModel<*, *, *>> createDialogFragment(): TFragment {
         val fragment = TFragment::class.java.newInstance()
         val args = Bundle()
         args.putSerializable("VIEW_MODEL_CLASS", TViewModel::class.java)
         fragment.arguments = args
         return fragment
+    }
+
+    inline fun <reified TViewModel: SubscribableViewModel<*, *, *>> initializeViewModel(fragment: Fragment, initializer: (vm: TViewModel) -> Unit) {
+        initializer(ViewModelProviders.of(fragment, viewModelFactory)[TViewModel::class.java])
     }
 }

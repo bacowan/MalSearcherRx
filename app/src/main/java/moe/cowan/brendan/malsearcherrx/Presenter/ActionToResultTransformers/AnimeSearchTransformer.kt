@@ -13,8 +13,7 @@ import javax.inject.Inject
 class AnimeSearchTransformer @Inject constructor(private val animeSearcher: AnimeSearcher) : ObservableTransformer<AnimeSearchAction, AnimeSearchResult> {
     @Override
     override fun apply(upstream: Observable<AnimeSearchAction>): ObservableSource<AnimeSearchResult> {
-        return upstream
-                .flatMap {
+        return upstream.flatMap {
                     action -> animeSearcher.getMatchingAnime(action.searchString)
                         .map { response -> AnimeSearchResult(false, anime = response) }
                         .onErrorReturn { AnimeSearchResult(false, message = "oops") }

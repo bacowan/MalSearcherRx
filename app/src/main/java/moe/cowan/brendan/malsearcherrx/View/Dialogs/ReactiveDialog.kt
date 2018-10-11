@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.subjects.PublishSubject
 import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.MissingViewModelException
 import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.SubscribableViewModel
 import java.lang.ClassCastException
@@ -26,7 +27,7 @@ abstract class ReactiveDialog<TEvent, TModel, TPost> : DialogFragment() {
 
     private var disposables = CompositeDisposable()
 
-    private var previousModel: TModel? = null
+    protected var currentModel: TModel? = null
 
     protected abstract val layout: Int
 
@@ -80,11 +81,11 @@ abstract class ReactiveDialog<TEvent, TModel, TPost> : DialogFragment() {
         val vm = ViewModelProviders.of(this, viewModelFactory)[viewModelClass]
 
         val uiEvents = setupUiEvents()
-        val (uiModels, posts) = vm.SubscribeTo(uiEvents)
+        val (uiModels, posts) = vm.subscribeTo(uiEvents)
 
-        disposables.add(uiModels.subscribe { model -> if (previousModel != model) {
+        disposables.add(uiModels.subscribe { model -> if (currentModel != model) {
             updateUIModel(model)
-            previousModel = model
+            currentModel = model
         }})
         disposables.add(posts.subscribe { post -> updateUIPost(post) })
     }

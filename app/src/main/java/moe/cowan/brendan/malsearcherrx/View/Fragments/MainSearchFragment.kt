@@ -10,13 +10,16 @@ import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.MainSearchUIM
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.MainSearchUIPost
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.ShowAnimeSearch
 import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.AnimeSearchViewModel
+import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.CharacterSearchViewModel
 import moe.cowan.brendan.malsearcherrx.View.Dialogs.SearchDialog
 import moe.cowan.brendan.malsearcherrx.View.Dialogs.SearchResultKey
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchResultUIModel
+import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.ShowCharacterSearch
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.*
 import javax.inject.Inject
 
 const val AnimeResultCode = 1
+const val CharacterResultCode = 2
 
 class MainSearchFragment : ReactiveFragment<MainSearchUIEvent, MainSearchUIModel, MainSearchUIPost>() {
 
@@ -53,6 +56,12 @@ class MainSearchFragment : ReactiveFragment<MainSearchUIEvent, MainSearchUIModel
             is ShowAnimeSearch -> {
                 val fragment = fragmentFactory.createDialogFragment<SearchDialog, AnimeSearchViewModel>()
                 fragment.setTargetFragment(this, AnimeResultCode)
+                fragment.show(fragmentManager, "")
+            }
+            is ShowCharacterSearch -> {
+                val fragment = fragmentFactory.createDialogFragment<SearchDialog, CharacterSearchViewModel>()
+                fragmentFactory.initializeViewModel<CharacterSearchViewModel>(this) { vm -> vm.anime = currentModel?.anime }
+                fragment.setTargetFragment(this, CharacterResultCode)
                 fragment.show(fragmentManager, "")
             }
         }
