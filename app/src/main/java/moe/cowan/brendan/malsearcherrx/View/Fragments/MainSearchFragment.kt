@@ -59,8 +59,8 @@ class MainSearchFragment : ReactiveFragment<MainSearchUIEvent, MainSearchUIModel
                 fragment.show(fragmentManager, "")
             }
             is ShowCharacterSearch -> {
-                val fragment = fragmentFactory.createDialogFragment<SearchDialog, CharacterSearchViewModel>()
-                fragmentFactory.initializeViewModel<CharacterSearchViewModel>(this) { vm -> vm.anime = currentModel?.anime }
+                val fragment = fragmentFactory.createDialogFragment<SearchDialog, CharacterSearchViewModel>
+                    { vm -> vm.anime = currentModel?.anime }
                 fragment.setTargetFragment(this, CharacterResultCode)
                 fragment.show(fragmentManager, "")
             }
