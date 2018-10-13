@@ -8,9 +8,7 @@ import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Login.LoginUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.LoginUIPost
 import javax.inject.Inject
 
-class LoginViewModel @Inject constructor(): SubscribableViewModel<LoginUIEvent, LoginUIModel, LoginUIPost>(
-
-) {
+class LoginViewModel @Inject constructor(): SubscribableViewModel<LoginUIEvent, LoginUIModel, LoginUIPost>() {
     @Inject
     lateinit var loginTransformer: LoginTransformer
 

@@ -20,6 +20,7 @@ import moe.cowan.brendan.malsearcherrx.R
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.DialogSearchUIEvent
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.SearchEvent
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchDialogUIModel
+import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchHint
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchResultUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.SearchDialogUIPost
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.SearchItemClickEvent
@@ -61,6 +62,11 @@ class SearchDialog : ReactiveDialog<DialogSearchUIEvent, SearchDialogUIModel, Se
         progress_bar_layout.visibility = when (model.inProgress) {
             true -> View.VISIBLE
             else -> View.GONE
+        }
+
+        edit_anime_title.hint = when(model.searchHint) {
+            SearchHint.Anime -> resources.getString(R.string.anime_search_hint)
+            SearchHint.Character -> resources.getString(R.string.character_search_hint)
         }
 
         val clickListener = object:SearchResultsAdapter.OnSearchResultClickListener {

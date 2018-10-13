@@ -12,7 +12,7 @@
             android:id="@+id/edit_anime_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/anime_title"
+            android:hint="@string/anime_search_hint"
             android:inputType="text"
             android:imeOptions="actionSearch"
             android:drawableEnd="@drawable/ic_search"/>

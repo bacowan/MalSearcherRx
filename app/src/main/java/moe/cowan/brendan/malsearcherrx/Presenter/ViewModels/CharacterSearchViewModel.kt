@@ -1,16 +1,14 @@
 package moe.cowan.brendan.malsearcherrx.Presenter.ViewModels
 
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.ReplaySubject
-import moe.cowan.brendan.malsearcherrx.Model.DataModels.Anime
 import moe.cowan.brendan.malsearcherrx.Presenter.ActionToResultTransformers.CharacterSearchTransformer
 import moe.cowan.brendan.malsearcherrx.Presenter.Actions.CharacterSearchAction
 import moe.cowan.brendan.malsearcherrx.Presenter.Results.CharacterSearchResult
 import moe.cowan.brendan.malsearcherrx.Utilities.Optional
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchDialogUIModel
+import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchHint
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchResultUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.SearchDialogUIPost
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.DialogSearchUIEvent
@@ -41,10 +39,11 @@ class CharacterSearchViewModel @Inject constructor(): SubscribableViewModel<Dial
         results.ofType(SearchResultUIModel::class.java).map { Optional.of(it) }.subscribe(parentAnimeSubject)
 
         val uiModels = results.ofType(CharacterSearchResult::class.java)
-                .scan(SearchDialogUIModel(inProgress = false, searchResults = listOf(), message = "")) { _, current ->
+                .scan(SearchDialogUIModel(inProgress = false, searchResults = listOf(), searchHint = SearchHint.Character)) { _, current ->
                 SearchDialogUIModel(
                         inProgress = current.inProgress,
                         searchResults = current.characters.map { character -> SearchResultUIModel(character.name, character.imageUrl, character.databaseId) },
+                        searchHint = SearchHint.Character,
                         message = current.message)
         }
 
