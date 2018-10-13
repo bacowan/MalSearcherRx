@@ -1,13 +1,11 @@
 package moe.cowan.brendan.malsearcherrx.Presenter.ViewModels
 
 import io.reactivex.Observable
-import moe.cowan.brendan.malsearcherrx.Presenter.Actions.AnimeSearchAction
-import moe.cowan.brendan.malsearcherrx.Presenter.Results.AnimeSearchResult
+import io.reactivex.rxkotlin.withLatestFrom
+import io.reactivex.subjects.BehaviorSubject
+import moe.cowan.brendan.malsearcherrx.Utilities.Optional
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.MainSearchUIModel
-import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchDialogUIModel
-import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchResultUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.MainSearchUIPost
-import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.SearchDialogUIPost
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.ShowAnimeSearch
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.ShowCharacterSearch
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.*
@@ -15,19 +13,20 @@ import javax.inject.Inject
 
 class MainSearchViewModel @Inject constructor(): SubscribableViewModel<MainSearchUIEvent, MainSearchUIModel, MainSearchUIPost>() {
 
+    private val previousModelSubject: BehaviorSubject<Optional<MainSearchUIModel>> = BehaviorSubject.create()
+
     override fun subscribe(events: Observable<MainSearchUIEvent>) : Pair<Observable<MainSearchUIModel>?, Observable<MainSearchUIPost>?> {
         val results = events.publish { shared -> Observable.merge(
                 shared.ofType(StartAnimeSearchEvent::class.java).map { ShowAnimeSearch() as MainSearchUIPost },
-                shared.ofType(StartCharacterSearchEvent::class.java).map { ShowCharacterSearch() as MainSearchUIPost },
+                shared.ofType(StartCharacterSearchEvent::class.java).withLatestFrom(previousModelSubject.startWith(Optional.empty()))
+                    { _, previousModel -> ShowCharacterSearch(previousModel.flatMap { it.anime }) as MainSearchUIPost},
                 shared.ofType(SearchAnimeResultEvent::class.java))
         }.share()
 
-        val uiModels = results.scan(MainSearchUIModel(anime = null, character = null, language = null)) { previous, current ->
-            when (current) {
-                is SearchAnimeResultEvent -> previous.copy(anime = current.results)
-                else -> previous
-            }
-        }
+        val uiModels = results.ofType(SearchAnimeResultEvent::class.java).scan(MainSearchUIModel(anime = Optional.empty(), character = Optional.empty(), language = Optional.empty()))
+            { previous, current -> previous.copy(anime = Optional.of(current.results)) }
+
+        uiModels.map { Optional.of(it) }.subscribe(previousModelSubject)
 
         val posts = results.ofType(MainSearchUIPost::class.java)
 

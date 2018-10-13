@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.v4.app.DialogFragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.ReplaySubject
 import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.MissingViewModelException
 import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.SubscribableViewModel
 import java.lang.ClassCastException
@@ -27,9 +29,11 @@ abstract class ReactiveDialog<TEvent, TModel, TPost> : DialogFragment() {
 
     private var disposables = CompositeDisposable()
 
-    protected var currentModel: TModel? = null
+    private var currentModel: TModel? = null
 
     protected abstract val layout: Int
+
+    private val externalEvents: ReplaySubject<TEvent> = ReplaySubject.create()
 
     @Override
     @CallSuper
@@ -80,7 +84,7 @@ abstract class ReactiveDialog<TEvent, TModel, TPost> : DialogFragment() {
     private fun setupStreams() {
         val vm = ViewModelProviders.of(this, viewModelFactory)[viewModelClass]
 
-        val uiEvents = setupUiEvents()
+        val uiEvents = setupUiEvents().doOnNext { Log.v("TEST", "ui events") }.mergeWith(externalEvents.doOnNext { Log.v("TEST", "external events") })
         val (uiModels, posts) = vm.subscribeTo(uiEvents)
 
         disposables.add(uiModels.subscribe { model -> if (currentModel != model) {
@@ -95,5 +99,9 @@ abstract class ReactiveDialog<TEvent, TModel, TPost> : DialogFragment() {
     protected open fun updateUIModel(model: TModel) {}
 
     protected open fun updateUIPost(post: TPost) {}
+
+    fun sendEvent(event: TEvent) {
+        externalEvents.onNext(event)
+    }
 
 }

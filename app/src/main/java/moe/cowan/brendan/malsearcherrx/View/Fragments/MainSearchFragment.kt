@@ -7,14 +7,12 @@ import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.search_fragment.*
 import moe.cowan.brendan.malsearcherrx.R
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.MainSearchUIModel
-import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.MainSearchUIPost
-import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.ShowAnimeSearch
 import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.AnimeSearchViewModel
 import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.CharacterSearchViewModel
 import moe.cowan.brendan.malsearcherrx.View.Dialogs.SearchDialog
 import moe.cowan.brendan.malsearcherrx.View.Dialogs.SearchResultKey
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchResultUIModel
-import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.ShowCharacterSearch
+import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.*
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.*
 import javax.inject.Inject
 
@@ -60,25 +58,18 @@ class MainSearchFragment : ReactiveFragment<MainSearchUIEvent, MainSearchUIModel
             }
             is ShowCharacterSearch -> {
                 val fragment = fragmentFactory.createDialogFragment<SearchDialog, CharacterSearchViewModel>()
-                fragmentFactory.initializeViewModel<CharacterSearchViewModel>(this) { vm -> vm.anime = currentModel?.anime }
                 fragment.setTargetFragment(this, CharacterResultCode)
                 fragment.show(fragmentManager, "")
+                post.parentAnime.ifPresent { fragment.sendEvent(SetParentAnimeEvent(it)) }
             }
         }
     }
 
     @Override
     override fun updateUIModel(model: MainSearchUIModel) {
-        if (model.anime != null) {
-            anime_search_button.text = model.anime.title
-        }
-
-        if (model.character != null) {
-        }
-
-        if (model.language != null) {
-        }
-
+        model.anime.ifPresent { anime_search_button.text = it.title }
+        model.character.ifPresent { character_search_button.text = it.title }
+        model.language.ifPresent { language_search_button.text = it }
     }
 
     @Override
@@ -91,5 +82,8 @@ class MainSearchFragment : ReactiveFragment<MainSearchUIEvent, MainSearchUIModel
             }
         }
     }
+
+    @Override
+    override fun getErrorPost(error: Throwable): MainSearchUIPost = MainSearchErrorPost(error.message ?: "oops")
 
 }

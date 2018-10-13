@@ -6,3 +6,5 @@ interface DialogSearchUIEvent
 
 data class SearchEvent(val searchString: String): DialogSearchUIEvent
 data class SearchItemClickEvent(val searchItem: SearchResultUIModel): DialogSearchUIEvent
+
+data class SetParentAnimeEvent(val anime: SearchResultUIModel): DialogSearchUIEvent

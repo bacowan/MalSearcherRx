@@ -12,6 +12,7 @@ import moe.cowan.brendan.malsearcherrx.R
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.Login.LoginUIEvent
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Login.LoginUIModel
 import android.view.inputmethod.InputMethodManager
+import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.LoginErrorPost
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.LoginUIPost
 
 
@@ -53,6 +54,9 @@ class LoginFragment : ReactiveFragment<LoginUIEvent, LoginUIModel, LoginUIPost>(
             }
         }
     }
+
+    @Override
+    override fun getErrorPost(error: Throwable): LoginUIPost = LoginErrorPost(error.message ?: "oops")
 
     interface OnLoginListener {
         fun OnLogin(username: String)

@@ -11,7 +11,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class FragmentFactory @Inject constructor(val viewModelFactory: ViewModelProvider.Factory) {
+class FragmentFactory @Inject constructor() {
 
     inline fun <reified TFragment: ReactiveFragment<*, *, *>, reified TViewModel: SubscribableViewModel<*, *, *>> createFragment(): TFragment {
         val fragment = TFragment::class.java.newInstance()
@@ -27,9 +27,5 @@ class FragmentFactory @Inject constructor(val viewModelFactory: ViewModelProvide
         args.putSerializable("VIEW_MODEL_CLASS", TViewModel::class.java)
         fragment.arguments = args
         return fragment
-    }
-
-    inline fun <reified TViewModel: SubscribableViewModel<*, *, *>> initializeViewModel(fragment: Fragment, initializer: (vm: TViewModel) -> Unit) {
-        initializer(ViewModelProviders.of(fragment, viewModelFactory)[TViewModel::class.java])
     }
 }

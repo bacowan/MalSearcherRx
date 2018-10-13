@@ -25,8 +25,6 @@ abstract class ReactiveFragment<TEvent, TModel, TPost> : Fragment() {
 
     private var disposables = CompositeDisposable()
 
-    protected var currentModel: TModel? = null
-
     protected abstract val layout: Int
 
     @Override
@@ -77,12 +75,12 @@ abstract class ReactiveFragment<TEvent, TModel, TPost> : Fragment() {
         val uiEvents = setupUiEvents()
         val (uiModels, posts) = vm.subscribeTo(uiEvents)
 
-        disposables.add(uiModels.subscribe { model -> if (currentModel != model) {
-            updateUIModel(model)
-            currentModel = model
-        }})
-        disposables.add(posts.subscribe { post -> updateUIPost(post) } )
+        disposables.add(uiModels.subscribe { updateUIModel(it) })
+
+        disposables.add(posts.subscribe { updateUIPost(it) })
     }
+
+    protected abstract fun getErrorPost(error: Throwable): TPost
 
     protected abstract fun setupUiEvents() : Observable<TEvent>
 
