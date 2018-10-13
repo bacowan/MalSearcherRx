@@ -20,11 +20,17 @@ class MainSearchViewModel @Inject constructor(): SubscribableViewModel<MainSearc
                 shared.ofType(StartAnimeSearchEvent::class.java).map { ShowAnimeSearch() as MainSearchUIPost },
                 shared.ofType(StartCharacterSearchEvent::class.java).withLatestFrom(previousModelSubject.startWith(Optional.empty()))
                     { _, previousModel -> ShowCharacterSearch(previousModel.flatMap { it.anime }) as MainSearchUIPost},
-                shared.ofType(SearchAnimeResultEvent::class.java))
+                shared.ofType(SearchResultEvent::class.java))
         }.share()
 
-        val uiModels = results.ofType(SearchAnimeResultEvent::class.java).scan(MainSearchUIModel(anime = Optional.empty(), character = Optional.empty(), language = Optional.empty()))
-            { previous, current -> previous.copy(anime = Optional.of(current.results)) }
+        val uiModels = results.ofType(SearchResultEvent::class.java).scan(MainSearchUIModel(anime = Optional.empty(), character = Optional.empty(), language = Optional.empty()))
+                    { previous, current ->
+                        when (current) {
+                            is SearchAnimeResultEvent -> previous.copy(anime = Optional.of(current.results))
+                            is SearchCharacterResultEvent -> previous.copy(character = Optional.of(current.results))
+                            else -> previous
+                        }
+                    }
 
         uiModels.map { Optional.of(it) }.subscribe(previousModelSubject)
 

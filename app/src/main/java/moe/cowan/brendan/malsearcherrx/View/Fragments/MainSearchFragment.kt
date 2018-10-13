@@ -26,7 +26,7 @@ class MainSearchFragment : ReactiveFragment<MainSearchUIEvent, MainSearchUIModel
 
     override val layout get() = R.layout.search_fragment
 
-    private val searchResultsSubject: BehaviorSubject<SearchResultUIModel> = BehaviorSubject.create()
+    private val searchResultsSubject: BehaviorSubject<MainSearchUIEvent> = BehaviorSubject.create()
 
     @Override
     override fun setupUiEvents() : Observable<MainSearchUIEvent> {
@@ -39,13 +39,10 @@ class MainSearchFragment : ReactiveFragment<MainSearchUIEvent, MainSearchUIModel
         val searchLanguageEvents = RxView.clicks(language_search_button)
                 .map { StartLanguageSearchEvent() as MainSearchUIEvent }
 
-        val searchAnimeResultEvents = searchResultsSubject
-                .map { SearchAnimeResultEvent(it) }
-
         return searchAnimeEvents
                 .mergeWith(searchCharacterEvents)
                 .mergeWith(searchLanguageEvents)
-                .mergeWith(searchAnimeResultEvents)
+                .mergeWith(searchResultsSubject)
     }
 
     @Override
@@ -78,7 +75,13 @@ class MainSearchFragment : ReactiveFragment<MainSearchUIEvent, MainSearchUIModel
         if (requestCode == AnimeResultCode) {
             val anime = data?.getSerializableExtra(SearchResultKey)
             if (anime is SearchResultUIModel) {
-                searchResultsSubject.onNext(anime)
+                searchResultsSubject.onNext(SearchAnimeResultEvent(anime))
+            }
+        }
+        else if (requestCode == CharacterResultCode) {
+            val character = data?.getSerializableExtra(SearchResultKey)
+            if (character is SearchResultUIModel) {
+                searchResultsSubject.onNext(SearchCharacterResultEvent(character))
             }
         }
     }
