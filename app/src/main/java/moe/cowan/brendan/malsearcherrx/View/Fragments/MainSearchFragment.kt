@@ -9,6 +9,7 @@ import moe.cowan.brendan.malsearcherrx.R
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.MainSearchUIModel
 import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.AnimeSearchViewModel
 import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.CharacterSearchViewModel
+import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.LanguageSearchViewModel
 import moe.cowan.brendan.malsearcherrx.View.Dialogs.SearchDialog
 import moe.cowan.brendan.malsearcherrx.View.Dialogs.SearchResultKey
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchResultUIModel
@@ -18,6 +19,7 @@ import javax.inject.Inject
 
 const val AnimeResultCode = 1
 const val CharacterResultCode = 2
+const val LanguageResultCode = 3
 
 class MainSearchFragment : ReactiveFragment<MainSearchUIEvent, MainSearchUIModel, MainSearchUIPost>() {
 
@@ -58,6 +60,12 @@ class MainSearchFragment : ReactiveFragment<MainSearchUIEvent, MainSearchUIModel
                 fragment.setTargetFragment(this, CharacterResultCode)
                 fragment.show(fragmentManager, "")
                 post.parentAnime.ifPresent { fragment.sendEvent(SetParentAnimeEvent(it)) }
+            }
+            is ShowLanguageSearch -> {
+                val fragment = fragmentFactory.createDialogFragment<SearchDialog, LanguageSearchViewModel>()
+                fragment.setTargetFragment(this, LanguageResultCode)
+                fragment.show(fragmentManager, "")
+                fragment.sendEvent(SetParentCharacterEvent(post.parentCharacter))
             }
         }
     }

@@ -7,6 +7,17 @@ class Optional<out T> private constructor(private val value: T?) {
         fun <T> of(value: T): Optional<T> = Optional(value)
     }
 
+    val hasValue: Boolean get() = value != null
+
+    fun get(): T {
+        if (value != null) {
+            return value
+        }
+        else {
+            throw NoSuchElementException("Unwrapping empty optional")
+        }
+    }
+
     fun ifPresent(consumer: (value: T) -> Unit) {
         if (value != null) {
             consumer(value)

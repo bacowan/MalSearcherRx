@@ -16,7 +16,7 @@ class LoginViewModel @Inject constructor(): SubscribableViewModel<LoginUIEvent, 
         val results = events.map { ev -> LoginAction(ev.username) }
                 .publish { shared -> shared.compose(loginTransformer) }
 
-        val uiModels = results.scan(LoginUIModel(InProgress = false, SuccessfulUsername = null, Message = "")) { previous, current ->
+        val uiModels = results.scan(LoginUIModel(InProgress = false, SuccessfulUsername = null, Message = "")) { _, current ->
             LoginUIModel(InProgress = current.InProgress, Message = current.Message, SuccessfulUsername = current.SuccessfulUsername)
         }
 

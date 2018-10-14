@@ -8,6 +8,7 @@ import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.MainSearchUIM
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.MainSearchUIPost
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.ShowAnimeSearch
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.ShowCharacterSearch
+import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.ShowLanguageSearch
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.*
 import javax.inject.Inject
 
@@ -19,7 +20,10 @@ class MainSearchViewModel @Inject constructor(): SubscribableViewModel<MainSearc
         val results = events.publish { shared -> Observable.merge(
                 shared.ofType(StartAnimeSearchEvent::class.java).map { ShowAnimeSearch() as MainSearchUIPost },
                 shared.ofType(StartCharacterSearchEvent::class.java).withLatestFrom(previousModelSubject.startWith(Optional.empty()))
-                    { _, previousModel -> ShowCharacterSearch(previousModel.flatMap { it.anime }) as MainSearchUIPost},
+                    { _, previousModel -> ShowCharacterSearch(previousModel.flatMap { it.anime }) as MainSearchUIPost },
+                shared.ofType(StartLanguageSearchEvent::class.java).withLatestFrom(
+                        previousModelSubject.filter { it.hasValue }.map { it.get() }.filter { it.character.hasValue }.map { it.character.get() })
+                            { _, character -> ShowLanguageSearch( character ) },
                 shared.ofType(SearchResultEvent::class.java))
         }.share()
 

@@ -7,6 +7,6 @@ interface MainSearchUIPost
 
 class ShowAnimeSearch : MainSearchUIPost
 data class ShowCharacterSearch(val parentAnime: Optional<SearchResultUIModel>) : MainSearchUIPost
-class ShowLanguageSearch : MainSearchUIPost
+data class ShowLanguageSearch(val parentCharacter: SearchResultUIModel) : MainSearchUIPost
 
 data class MainSearchErrorPost(val message: String): MainSearchUIPost
