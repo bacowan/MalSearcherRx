@@ -10,11 +10,12 @@ import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.MainSearchUIM
 import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.AnimeSearchViewModel
 import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.CharacterSearchViewModel
 import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.LanguageSearchViewModel
+import moe.cowan.brendan.malsearcherrx.View.Dialogs.ImageTextSearchDialog
 import moe.cowan.brendan.malsearcherrx.View.Dialogs.SearchDialog
 import moe.cowan.brendan.malsearcherrx.View.Dialogs.SearchResultKey
+import moe.cowan.brendan.malsearcherrx.View.Dialogs.TextSearchDialog
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.AnimeSearchResultUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.CharacterSearchResultUIModel
-import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchResultUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.*
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.*
 import javax.inject.Inject
@@ -53,18 +54,18 @@ class MainSearchFragment : ReactiveFragment<MainSearchUIEvent, MainSearchUIModel
     override fun updateUIPost(post: MainSearchUIPost) {
         when (post) {
             is ShowAnimeSearch -> {
-                val fragment = fragmentFactory.createDialogFragment<SearchDialog, AnimeSearchViewModel>()
+                val fragment = fragmentFactory.createDialogFragment<ImageTextSearchDialog, AnimeSearchViewModel>()
                 fragment.setTargetFragment(this, AnimeResultCode)
                 fragment.show(fragmentManager, "")
             }
             is ShowCharacterSearch -> {
-                val fragment = fragmentFactory.createDialogFragment<SearchDialog, CharacterSearchViewModel>()
+                val fragment = fragmentFactory.createDialogFragment<ImageTextSearchDialog, CharacterSearchViewModel>()
                 fragment.setTargetFragment(this, CharacterResultCode)
                 fragment.show(fragmentManager, "")
                 post.parentAnime.ifPresent { fragment.sendEvent(SetParentAnimeEvent(it)) }
             }
             is ShowLanguageSearch -> {
-                val fragment = fragmentFactory.createDialogFragment<SearchDialog, LanguageSearchViewModel>()
+                val fragment = fragmentFactory.createDialogFragment<TextSearchDialog, LanguageSearchViewModel>()
                 fragment.setTargetFragment(this, LanguageResultCode)
                 fragment.show(fragmentManager, "")
                 fragment.sendEvent(SetParentCharacterEvent(post.parentCharacter))

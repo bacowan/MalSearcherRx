@@ -9,9 +9,9 @@ import moe.cowan.brendan.malsearcherrx.Presenter.Actions.CharacterSearchAction
 import moe.cowan.brendan.malsearcherrx.Presenter.Results.CharacterSearchResult
 import moe.cowan.brendan.malsearcherrx.Utilities.Optional
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.CharacterSearchResultUIModel
+import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.ImageTextSearchDialogUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchDialogUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchHint
-import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchResultUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.SearchDialogUIPost
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.DialogSearchUIEvent
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.SearchEvent
@@ -41,8 +41,8 @@ class CharacterSearchViewModel @Inject constructor(): SubscribableViewModel<Dial
         results.ofType(Anime::class.java).map { Optional.of(it) }.subscribe(parentAnimeSubject)
 
         val uiModels = results.ofType(CharacterSearchResult::class.java)
-                .scan(SearchDialogUIModel(inProgress = false, searchResults = listOf(), searchHint = SearchHint.Character)) { _, current ->
-                SearchDialogUIModel(
+                .scan(ImageTextSearchDialogUIModel(inProgress = false, searchResults = listOf(), searchHint = SearchHint.Character) as SearchDialogUIModel) { _, current ->
+                    ImageTextSearchDialogUIModel(
                         inProgress = current.inProgress,
                         searchResults = current.characters.map { character -> CharacterSearchResultUIModel(character.name, character.imageUrl, character) },
                         searchHint = SearchHint.Character,

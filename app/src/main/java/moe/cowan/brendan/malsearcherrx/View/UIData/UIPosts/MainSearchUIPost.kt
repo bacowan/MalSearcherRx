@@ -3,7 +3,6 @@ package moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts
 import moe.cowan.brendan.malsearcherrx.Model.DataModels.Anime
 import moe.cowan.brendan.malsearcherrx.Model.DataModels.AnimeCharacter
 import moe.cowan.brendan.malsearcherrx.Utilities.Optional
-import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchResultUIModel
 
 interface MainSearchUIPost
 

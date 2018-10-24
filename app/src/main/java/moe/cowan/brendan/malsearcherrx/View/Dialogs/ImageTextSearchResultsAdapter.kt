@@ -8,16 +8,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
 import moe.cowan.brendan.malsearcherrx.R
-import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchResultUIModel
+import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.ImageTextSearchResultUIModel
 
-class SearchResultsAdapter(
-        private val dataSet: List<SearchResultUIModel>,
-        private val clickListener: OnSearchResultClickListener)
-    : RecyclerView.Adapter<SearchResultsAdapter.SearchResultViewHolder>()
+class ImageTextSearchResultsAdapter(
+        private val dataSet: List<ImageTextSearchResultUIModel>,
+        private val clickListener: ClickListener<ImageTextSearchResultUIModel>)
+    : RecyclerView.Adapter<ImageTextSearchResultsAdapter.SearchResultViewHolder>()
 {
-    interface OnSearchResultClickListener {
-        fun onClick(row: SearchResultUIModel)
-    }
 
     class SearchResultViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val textView: TextView = itemView.findViewById(R.id.text_view)
@@ -26,7 +23,7 @@ class SearchResultsAdapter(
 
     @Override
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.search_result_row, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.image_text_search_result_row, parent, false)
         return SearchResultViewHolder(view)
     }
 

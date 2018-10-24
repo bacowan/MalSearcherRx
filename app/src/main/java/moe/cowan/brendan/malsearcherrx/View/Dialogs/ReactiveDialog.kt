@@ -84,7 +84,7 @@ abstract class ReactiveDialog<TEvent, TModel, TPost> : DialogFragment() {
     private fun setupStreams() {
         val vm = ViewModelProviders.of(this, viewModelFactory)[viewModelClass]
 
-        val uiEvents = setupUiEvents().doOnNext { Log.v("TEST", "ui events") }.mergeWith(externalEvents.doOnNext { Log.v("TEST", "external events") })
+        val uiEvents = setupUiEvents().mergeWith(externalEvents)
         val (uiModels, posts) = vm.subscribeTo(uiEvents)
 
         disposables.add(uiModels.subscribe { model -> if (currentModel != model) {

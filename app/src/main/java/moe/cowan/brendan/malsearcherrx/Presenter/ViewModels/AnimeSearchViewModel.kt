@@ -5,6 +5,7 @@ import moe.cowan.brendan.malsearcherrx.Presenter.ActionToResultTransformers.Anim
 import moe.cowan.brendan.malsearcherrx.Presenter.Actions.AnimeSearchAction
 import moe.cowan.brendan.malsearcherrx.Presenter.Results.AnimeSearchResult
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.AnimeSearchResultUIModel
+import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.ImageTextSearchDialogUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchDialogUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchHint
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.SearchDialogUIPost
@@ -27,9 +28,9 @@ class AnimeSearchViewModel @Inject constructor(): SubscribableViewModel<DialogSe
                         .map { SearchDialogUIPost(it.searchItem) })
         }.share()
 
-        val uiModels = results.scan(SearchDialogUIModel(inProgress = false, searchResults = listOf(), searchHint = SearchHint.Anime)) { previous, current ->
+        val uiModels = results.scan(ImageTextSearchDialogUIModel(inProgress = false, searchResults = listOf(), searchHint = SearchHint.Anime) as SearchDialogUIModel) { previous, current ->
             if (current is AnimeSearchResult) {
-                SearchDialogUIModel(
+                ImageTextSearchDialogUIModel(
                         inProgress = current.inProgress,
                         searchResults = current.anime.map { anime -> AnimeSearchResultUIModel(anime.title, anime.imageUrl, anime) },
                         searchHint = SearchHint.Anime,

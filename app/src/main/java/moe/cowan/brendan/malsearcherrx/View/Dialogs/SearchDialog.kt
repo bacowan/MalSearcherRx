@@ -21,13 +21,16 @@ import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.DialogSearchUIEvent
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.SearchEvent
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchDialogUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchHint
-import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchResultUIModel
+import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.ImageTextSearchResultUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.SearchDialogUIPost
-import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.SearchItemClickEvent
+import javax.inject.Inject
 
 const val SearchResultKey = "SEARCH_RESULT"
 
-class SearchDialog : ReactiveDialog<DialogSearchUIEvent, SearchDialogUIModel, SearchDialogUIPost>() {
+abstract class SearchDialog<T: SearchDialogUIModel, U> : ReactiveDialog<DialogSearchUIEvent, T, SearchDialogUIPost>() {
+
+    @Inject
+    lateinit var adapterFactory: SearchResultsAdapterFactory<T, U>
 
     override val layout: Int get() = R.layout.search_dialog
 
@@ -58,7 +61,7 @@ class SearchDialog : ReactiveDialog<DialogSearchUIEvent, SearchDialogUIModel, Se
     }
 
     @Override
-    override fun updateUIModel(model: SearchDialogUIModel) {
+    override fun updateUIModel(model: T) {
         progress_bar_layout.visibility = when (model.inProgress) {
             true -> View.VISIBLE
             else -> View.GONE
@@ -69,10 +72,10 @@ class SearchDialog : ReactiveDialog<DialogSearchUIEvent, SearchDialogUIModel, Se
             SearchHint.Character -> resources.getString(R.string.character_search_hint)
         }
 
-        val clickListener = object:SearchResultsAdapter.OnSearchResultClickListener {
-            override fun onClick(row: SearchResultUIModel) = itemClickSubject.onNext(SearchItemClickEvent(row))
+        val clickListener = object:ClickListener<U> {
+            override fun onClick(item: U) = itemClickSubject.onNext(adapterFactory.clickEvent(item))
         }
-        results_list.adapter = SearchResultsAdapter(model.searchResults, clickListener)
+        results_list.adapter = adapterFactory.newAdapter(model, clickListener)
     }
 
     @Override
