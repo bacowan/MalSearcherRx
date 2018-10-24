@@ -70,6 +70,7 @@ abstract class SearchDialog<T: SearchDialogUIModel, U> : ReactiveDialog<DialogSe
         edit_anime_title.hint = when(model.searchHint) {
             SearchHint.Anime -> resources.getString(R.string.anime_search_hint)
             SearchHint.Character -> resources.getString(R.string.character_search_hint)
+            SearchHint.Language -> resources.getString(R.string.language_search_hint)
         }
 
         val clickListener = object:ClickListener<U> {
