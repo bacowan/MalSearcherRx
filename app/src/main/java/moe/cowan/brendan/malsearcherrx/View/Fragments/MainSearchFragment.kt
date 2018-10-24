@@ -12,6 +12,8 @@ import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.CharacterSearchViewM
 import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.LanguageSearchViewModel
 import moe.cowan.brendan.malsearcherrx.View.Dialogs.SearchDialog
 import moe.cowan.brendan.malsearcherrx.View.Dialogs.SearchResultKey
+import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.AnimeSearchResultUIModel
+import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.CharacterSearchResultUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchResultUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.*
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.*
@@ -82,13 +84,13 @@ class MainSearchFragment : ReactiveFragment<MainSearchUIEvent, MainSearchUIModel
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == AnimeResultCode) {
             val anime = data?.getSerializableExtra(SearchResultKey)
-            if (anime is SearchResultUIModel) {
+            if (anime is AnimeSearchResultUIModel) {
                 searchResultsSubject.onNext(SearchAnimeResultEvent(anime))
             }
         }
         else if (requestCode == CharacterResultCode) {
             val character = data?.getSerializableExtra(SearchResultKey)
-            if (character is SearchResultUIModel) {
+            if (character is CharacterSearchResultUIModel) {
                 searchResultsSubject.onNext(SearchCharacterResultEvent(character))
             }
         }

@@ -3,10 +3,12 @@ package moe.cowan.brendan.malsearcherrx.Presenter.ViewModels
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
+import moe.cowan.brendan.malsearcherrx.Model.DataModels.Anime
 import moe.cowan.brendan.malsearcherrx.Presenter.ActionToResultTransformers.CharacterSearchTransformer
 import moe.cowan.brendan.malsearcherrx.Presenter.Actions.CharacterSearchAction
 import moe.cowan.brendan.malsearcherrx.Presenter.Results.CharacterSearchResult
 import moe.cowan.brendan.malsearcherrx.Utilities.Optional
+import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.CharacterSearchResultUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchDialogUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchHint
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.SearchResultUIModel
@@ -22,13 +24,13 @@ class CharacterSearchViewModel @Inject constructor(): SubscribableViewModel<Dial
     @Inject
     lateinit var characterSearchTransformer: CharacterSearchTransformer
 
-    private val parentAnimeSubject: BehaviorSubject<Optional<SearchResultUIModel>> = BehaviorSubject.create()
+    private val parentAnimeSubject: BehaviorSubject<Optional<Anime>> = BehaviorSubject.create()
 
     @Override
     override fun subscribe(events: Observable<DialogSearchUIEvent>): Pair<Observable<SearchDialogUIModel>?, Observable<SearchDialogUIPost>?> {
         val results = events.publish { shared -> Observable.merge(
                 shared.ofType(SearchEvent::class.java).withLatestFrom(parentAnimeSubject.startWith(Optional.empty()))
-                        { searchEvent, anime -> CharacterSearchAction(searchEvent.searchString, anime.map { it.databaseId }) }
+                        { searchEvent, anime -> CharacterSearchAction(searchEvent.searchString, anime) }
                         .compose(characterSearchTransformer),
                 shared.ofType(SearchItemClickEvent::class.java)
                         .map { SearchDialogUIPost(it.searchItem) },
@@ -36,13 +38,13 @@ class CharacterSearchViewModel @Inject constructor(): SubscribableViewModel<Dial
                         .map { it.anime })
         }.share()
 
-        results.ofType(SearchResultUIModel::class.java).map { Optional.of(it) }.subscribe(parentAnimeSubject)
+        results.ofType(Anime::class.java).map { Optional.of(it) }.subscribe(parentAnimeSubject)
 
         val uiModels = results.ofType(CharacterSearchResult::class.java)
                 .scan(SearchDialogUIModel(inProgress = false, searchResults = listOf(), searchHint = SearchHint.Character)) { _, current ->
                 SearchDialogUIModel(
                         inProgress = current.inProgress,
-                        searchResults = current.characters.map { character -> SearchResultUIModel(character.name, character.imageUrl, character.databaseId) },
+                        searchResults = current.characters.map { character -> CharacterSearchResultUIModel(character.name, character.imageUrl, character) },
                         searchHint = SearchHint.Character,
                         message = current.message)
         }

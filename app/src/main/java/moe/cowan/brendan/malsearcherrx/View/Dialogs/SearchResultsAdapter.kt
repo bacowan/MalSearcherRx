@@ -35,7 +35,7 @@ class SearchResultsAdapter(
         val boundItem = dataSet[position]
 
         holder.itemView.setOnClickListener {
-            clickListener.onClick(SearchResultUIModel(boundItem.title, boundItem.imageUrl, boundItem.databaseId))
+            clickListener.onClick(boundItem)
         }
 
         holder.textView.text = dataSet[position].title

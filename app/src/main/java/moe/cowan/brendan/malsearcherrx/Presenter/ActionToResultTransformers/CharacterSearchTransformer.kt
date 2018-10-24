@@ -14,7 +14,7 @@ class CharacterSearchTransformer @Inject constructor(private val characterSearch
     @Override
     override fun apply(upstream: Observable<CharacterSearchAction>): ObservableSource<CharacterSearchResult> {
         return upstream.flatMap {
-            action -> characterSearcher.getMatchingCharacter(action.searchString, action.animeId)
+            action -> characterSearcher.getMatchingCharacter(action.searchString, action.anime)
                 .map { response -> CharacterSearchResult(false, characters = response) }
                 .onErrorReturn { CharacterSearchResult(false, message = "oops") }
                 .observeOn(AndroidSchedulers.mainThread())
