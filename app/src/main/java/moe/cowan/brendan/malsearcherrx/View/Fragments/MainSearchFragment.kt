@@ -11,18 +11,18 @@ import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.AnimeSearchViewModel
 import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.CharacterSearchViewModel
 import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.LanguageSearchViewModel
 import moe.cowan.brendan.malsearcherrx.View.Dialogs.ImageTextSearchDialog
-import moe.cowan.brendan.malsearcherrx.View.Dialogs.SearchDialog
 import moe.cowan.brendan.malsearcherrx.View.Dialogs.SearchResultKey
 import moe.cowan.brendan.malsearcherrx.View.Dialogs.TextSearchDialog
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.AnimeSearchResultUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.CharacterSearchResultUIModel
+import moe.cowan.brendan.malsearcherrx.View.UIData.UIModels.Search.LanguageSearchResultUIModel
 import moe.cowan.brendan.malsearcherrx.View.UIData.UIPosts.*
 import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.*
 import javax.inject.Inject
 
-const val AnimeResultCode = 1
-const val CharacterResultCode = 2
-const val LanguageResultCode = 3
+const val AnimeRequestCode = 1
+const val CharacterRequestCode = 2
+const val LanguageRequestCode = 3
 
 class MainSearchFragment : ReactiveFragment<MainSearchUIEvent, MainSearchUIModel, MainSearchUIPost>() {
 
@@ -55,18 +55,18 @@ class MainSearchFragment : ReactiveFragment<MainSearchUIEvent, MainSearchUIModel
         when (post) {
             is ShowAnimeSearch -> {
                 val fragment = fragmentFactory.createDialogFragment<ImageTextSearchDialog, AnimeSearchViewModel>()
-                fragment.setTargetFragment(this, AnimeResultCode)
+                fragment.setTargetFragment(this, AnimeRequestCode)
                 fragment.show(fragmentManager, "")
             }
             is ShowCharacterSearch -> {
                 val fragment = fragmentFactory.createDialogFragment<ImageTextSearchDialog, CharacterSearchViewModel>()
-                fragment.setTargetFragment(this, CharacterResultCode)
+                fragment.setTargetFragment(this, CharacterRequestCode)
                 fragment.show(fragmentManager, "")
                 post.parentAnime.ifPresent { fragment.sendEvent(SetParentAnimeEvent(it)) }
             }
             is ShowLanguageSearch -> {
                 val fragment = fragmentFactory.createDialogFragment<TextSearchDialog, LanguageSearchViewModel>()
-                fragment.setTargetFragment(this, LanguageResultCode)
+                fragment.setTargetFragment(this, LanguageRequestCode)
                 fragment.show(fragmentManager, "")
                 fragment.sendEvent(SetParentCharacterEvent(post.parentCharacter))
             }
@@ -77,22 +77,30 @@ class MainSearchFragment : ReactiveFragment<MainSearchUIEvent, MainSearchUIModel
     override fun updateUIModel(model: MainSearchUIModel) {
         model.anime.ifPresent { anime_search_button.text = it.title }
         model.character.ifPresent { character_search_button.text = it.title }
-        model.language.ifPresent { language_search_button.text = it }
+        model.language.ifPresent { language_search_button.text = it.text }
     }
 
     @Override
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == AnimeResultCode) {
-            val anime = data?.getSerializableExtra(SearchResultKey)
-            if (anime is AnimeSearchResultUIModel) {
-                searchResultsSubject.onNext(SearchAnimeResultEvent(anime))
+        when (requestCode) {
+            AnimeRequestCode -> {
+                val anime = data?.getSerializableExtra(SearchResultKey)
+                if (anime is AnimeSearchResultUIModel) {
+                    searchResultsSubject.onNext(SearchAnimeResultEvent(anime))
+                }
             }
-        }
-        else if (requestCode == CharacterResultCode) {
-            val character = data?.getSerializableExtra(SearchResultKey)
-            if (character is CharacterSearchResultUIModel) {
-                searchResultsSubject.onNext(SearchCharacterResultEvent(character))
+            CharacterRequestCode -> {
+                val character = data?.getSerializableExtra(SearchResultKey)
+                if (character is CharacterSearchResultUIModel) {
+                    searchResultsSubject.onNext(SearchCharacterResultEvent(character))
+                }
+            }
+            LanguageRequestCode -> {
+                val language = data?.getSerializableExtra(SearchResultKey)
+                if (language is LanguageSearchResultUIModel) {
+                    searchResultsSubject.onNext(SearchLanguageResultEvent(language))
+                }
             }
         }
     }

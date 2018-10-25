@@ -32,6 +32,7 @@ class MainSearchViewModel @Inject constructor(): SubscribableViewModel<MainSearc
                         when (current) {
                             is SearchAnimeResultEvent -> previous.copy(anime = Optional.of(current.results))
                             is SearchCharacterResultEvent -> previous.copy(character = Optional.of(current.results))
+                            is SearchLanguageResultEvent -> previous.copy(language = Optional.of(current.results))
                             else -> previous
                         }
                     }

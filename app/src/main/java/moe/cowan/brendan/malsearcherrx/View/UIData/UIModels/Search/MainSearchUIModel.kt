@@ -7,4 +7,4 @@ import moe.cowan.brendan.malsearcherrx.Utilities.Optional
 data class MainSearchUIModel(
         val anime: Optional<AnimeSearchResultUIModel>,
         val character: Optional<CharacterSearchResultUIModel>,
-        val language: Optional<String>)
+        val language: Optional<LanguageSearchResultUIModel>)

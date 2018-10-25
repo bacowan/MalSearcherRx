@@ -18,7 +18,6 @@ class TextSearchResultsAdapter(
 
     class SearchResultViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val textView: TextView = itemView.findViewById(R.id.text_view)
-        val imageView: ImageView = itemView.findViewById(R.id.image_view)
     }
 
     @Override
