@@ -14,6 +14,7 @@ import moe.cowan.brendan.malsearcherrx.R
 import moe.cowan.brendan.malsearcherrx.View.Fragments.FragmentFactory
 import moe.cowan.brendan.malsearcherrx.View.Fragments.LoginFragment
 import moe.cowan.brendan.malsearcherrx.View.Fragments.MainSearchFragment
+import moe.cowan.brendan.malsearcherrx.View.UIEvents.Search.SetUserEvent
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, LoginFragment.OnLoginListener {
@@ -38,7 +39,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, LoginFragm
             val username = preferences.getString("username", "")
             val fragment = when (username) {
                 "" -> fragmentFactory.createFragment<LoginFragment, LoginViewModel>()
-                else -> fragmentFactory.createFragment<MainSearchFragment, MainSearchViewModel>()
+                else -> createMainSearchFragment(username)
             }
             supportFragmentManager.beginTransaction().add(R.id.main_fragment, fragment).commit()
         }
@@ -46,8 +47,14 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, LoginFragm
 
     override fun OnLogin(username: String) {
         saveUsername(username)
-        val fragment = fragmentFactory.createFragment<MainSearchFragment, MainSearchViewModel>()
+        val fragment = createMainSearchFragment(username)
         supportFragmentManager.beginTransaction().replace(R.id.main_fragment, fragment).commit()
+    }
+
+    private fun createMainSearchFragment(username: String): MainSearchFragment {
+        val fragment = fragmentFactory.createFragment<MainSearchFragment, MainSearchViewModel>()
+        fragment.sendEvent(SetUserEvent(username))
+        return fragment
     }
 
     private fun saveUsername(username: String) {

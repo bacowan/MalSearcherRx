@@ -28,6 +28,9 @@ class BackEndModule {
     fun CharacterSearcher() : CharacterSearcher = OnlyPikachuCharacterSearcher()
 
     @Provides
+    fun UserListService() : UserListService = OriginalPokemonUserListService()
+
+    @Provides
     fun ImageTextSearchResutsAdapterFactory(): SearchResultsAdapterFactory<ImageTextSearchDialogUIModel, ImageTextSearchResultUIModel> {
         return object: SearchResultsAdapterFactory<ImageTextSearchDialogUIModel, ImageTextSearchResultUIModel> {
             override fun newAdapter(model: ImageTextSearchDialogUIModel, clickListener: ClickListener<ImageTextSearchResultUIModel>): RecyclerView.Adapter<*> {

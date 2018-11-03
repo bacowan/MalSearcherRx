@@ -13,3 +13,5 @@ class StartLanguageSearchEvent : MainSearchUIEvent
 data class SearchAnimeResultEvent(val results: AnimeSearchResultUIModel) : SearchResultEvent
 data class SearchCharacterResultEvent(val results: CharacterSearchResultUIModel) : SearchResultEvent
 data class SearchLanguageResultEvent(val results: LanguageSearchResultUIModel) : SearchResultEvent
+
+data class SetUserEvent(val username: String): MainSearchUIEvent

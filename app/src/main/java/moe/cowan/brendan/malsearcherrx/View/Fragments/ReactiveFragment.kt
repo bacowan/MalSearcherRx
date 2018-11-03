@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.subjects.ReplaySubject
 import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.MissingViewModelException
 import moe.cowan.brendan.malsearcherrx.Presenter.ViewModels.SubscribableViewModel
 import java.lang.ClassCastException
@@ -26,6 +27,8 @@ abstract class ReactiveFragment<TEvent, TModel, TPost> : Fragment() {
     private var disposables = CompositeDisposable()
 
     protected abstract val layout: Int
+
+    private val externalEvents: ReplaySubject<TEvent> = ReplaySubject.create()
 
     @Override
     override fun onAttach(context: Context?) {
@@ -72,7 +75,7 @@ abstract class ReactiveFragment<TEvent, TModel, TPost> : Fragment() {
     private fun setupStreams() {
         val vm = ViewModelProviders.of(this, viewModelFactory)[viewModelClass]
 
-        val uiEvents = setupUiEvents()
+        val uiEvents = setupUiEvents().mergeWith(externalEvents)
         val (uiModels, posts) = vm.subscribeTo(uiEvents)
 
         disposables.add(uiModels.subscribe { updateUIModel(it) })
@@ -87,4 +90,8 @@ abstract class ReactiveFragment<TEvent, TModel, TPost> : Fragment() {
     protected open fun updateUIModel(model: TModel) {}
 
     protected open fun updateUIPost(post: TPost) {}
+
+    fun sendEvent(event: TEvent) {
+        externalEvents.onNext(event)
+    }
 }
